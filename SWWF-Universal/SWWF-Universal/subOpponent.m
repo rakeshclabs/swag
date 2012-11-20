@@ -14,7 +14,7 @@
 @end
 
 @implementation subOpponent
-@synthesize image,imageBox,gameMode;
+@synthesize image,imageBox,gameMode,oppName;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -77,22 +77,41 @@
     
     if (data)
     {
-         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error1];
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error1];
         NSLog(@"%@",json);
-        if([json objectForKey:@"error"]) {
+        if([json objectForKey:@"error"])
+        {
             UIAlertView *a=[[UIAlertView alloc]initWithTitle:@"" message:[json valueForKey:@"error"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
             [a show];
         }
-       
+        NSString *nouser=[json valueForKey:@"nouser"];
         
-        
-       else {
+        if(nouser)
+        {
+            UIAlertView *Alert=[[UIAlertView alloc]initWithTitle:@"" message:nouser delegate:@"nil" cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [Alert show];
+        }
+        else
+        {
+            NSDictionary *Char=[json objectForKey:@"character_data"];
+            NSDictionary *gameData=[json objectForKey:@"game_data"];
+            charArray=[Char valueForKey:@"name"];
+            charPointArray=[Char valueForKey:@"coins"];
+            self.oppName=[gameData valueForKey:@"opponent_name"];
+            gameId=[gameData valueForKey:@"game_id"];
+            NSLog(@"CharArray=%@",charArray);
+            NSLog(@"CharPointArray=%@",charPointArray);
+            
+            
+            [self performSegueWithIdentifier:@"game" sender:self];
+        }
+    }
+     else
+       {
         UIAlertView *a=[[UIAlertView alloc]initWithTitle:@"" message:@"no internet connection" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
         [a show];
     
-       }
     }
-    [self performSegueWithIdentifier:@"game" sender:self];
 }
 
 - (IBAction)backButton:(id)sender
