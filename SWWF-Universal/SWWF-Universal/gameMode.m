@@ -7,13 +7,14 @@
 //
 
 #import "gameMode.h"
+#import "selectOpponent.h"
 
 @interface gameMode ()
 
 @end
 
 @implementation gameMode
-
+@synthesize gameMode;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -23,6 +24,11 @@
     return self;
 }
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    selectOpponent *so=[segue destinationViewController];
+    so.gameMode=self.gameMode;
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -41,12 +47,17 @@
 }
 - (IBAction)swagMode:(id)sender 
 {
+    self.gameMode=@"swag";
+    [[NSUserDefaults standardUserDefaults]setValue:self.gameMode forKey:@"gameMode"];
     [self performSegueWithIdentifier:@"opponent" sender:self];
     
 }
 - (IBAction)mixedMode:(id)sender 
 {
-    [self performSegueWithIdentifier:@"opponent" sender:self];   
+    self.gameMode=@"mixed";
+    [[NSUserDefaults standardUserDefaults]setValue:self.gameMode forKey:@"gameMode"];
+
+    [self performSegueWithIdentifier:@"opponent" sender:self];
 }
 - (IBAction)backButton:(id)sender 
 {

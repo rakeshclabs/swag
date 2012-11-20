@@ -7,7 +7,7 @@
 //
 
 #import "UsernameViewController.h"
-#define kOFFSET_FOR_KEYBOARD 137.0
+#define kOFFSET_FOR_KEYBOARD 182.0
 
 @interface UsernameViewController ()
 
@@ -15,7 +15,7 @@
 
 @implementation UsernameViewController
 @synthesize emailId;
-
+@synthesize accessToken,userName,userImage;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -74,8 +74,15 @@
         NSString *newreg;
         if (data)
         {
+            NSDictionary *personalData=[json objectForKey:@"personal_data"];
+            userName=[personalData valueForKey:@"user_name"];
+            [[NSUserDefaults standardUserDefaults] setValue:userName forKey:@"userName"];
+            userImage=[personalData valueForKey:@"user_image"];
             newreg=[json valueForKey:@"error"];
-            
+            accessToken=[personalData valueForKey:@"access_token"];
+            NSLog(@"Access token=%@",accessToken);
+            [[NSUserDefaults standardUserDefaults] setObject:accessToken forKey:@"access_token"];
+            [[NSUserDefaults standardUserDefaults]synchronize];
             if(newreg)
             {
                 [self performSegueWithIdentifier:@"connect" sender:self];

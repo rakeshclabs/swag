@@ -13,6 +13,8 @@
     UIScrollView *gamesScroll;
     UIImageView *line;
     int h;
+    NSString *status;
+    NSString *lastStatus;
 }
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong,nonatomic)NSString *numberOfGames;

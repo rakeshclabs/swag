@@ -16,11 +16,19 @@
     IBOutlet UIButton *randomButton;
     IBOutlet UIButton *passButton;
     NSString *image;
+    NSString *gameId;
+    NSString *opponentName;
+    NSMutableArray *charArray;
+    NSMutableArray *charPointArray;
+    
     
 }
+
+@property(nonatomic,strong) NSString *gameMode;
 - (IBAction)facebookButton:(id)sender;
 - (IBAction)user:(id)sender;
 - (IBAction)random:(id)sender;
-- (IBAction)pass:(id)sender;
+@property(strong,nonatomic) NSString *oppName;
+
 
 @end

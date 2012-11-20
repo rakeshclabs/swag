@@ -15,5 +15,9 @@
 - (IBAction)goBackButton:(id)sender;
 - (IBAction)continueButton:(id)sender;
 @property(nonatomic,strong)NSString *emailId;
+@property(strong,nonatomic) NSString *accessToken;
+@property(strong,nonatomic) NSString *userName;
+@property (strong,nonatomic) NSString *userImage;
+
 
 @end

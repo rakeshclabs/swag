@@ -59,22 +59,22 @@
     dateCreatedArray=[[NSMutableArray alloc]init];
     gameStatusArray=[[NSMutableArray alloc]init];
     NSLog(@"Access Token=%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"access_token"]);
-    if([[NSUserDefaults standardUserDefaults]objectForKey:@"access_token"])
-    {
-        BG.image=[UIImage imageNamed:@"splash.png"];
-
-        [self POST];
-    }
-    
-    else
-    {
+//    if([[NSUserDefaults standardUserDefaults]objectForKey:@"access_token"])
+//    {
+//        BG.image=[UIImage imageNamed:@"splash.png"];
+//
+//        [self POST];
+//    }
+//    
+//    else
+//    {
         BG.image=[UIImage imageNamed:@"home.jpg"];
         [emailButton setImage:[UIImage imageNamed:@"login-click.png"] forState:UIControlStateNormal];
         [emailButton setImage:[UIImage imageNamed:@"login.png"] forState:UIControlStateHighlighted];
         [facebookButton setImage:[UIImage imageNamed:@"fb-click.png"] forState:UIControlStateNormal];
         [facebookButton setImage:[UIImage imageNamed:@"fb.png"] forState:UIControlStateHighlighted];
         // Do any additional setup after loading the view.
-    }
+    //}
 }
 - (void)viewDidUnload
 {
@@ -95,6 +95,7 @@
 
 - (IBAction)facebookButton:(id)sender
 {
+    [[NSUserDefaults standardUserDefaults]setValue:nil forKey:@"emailId"];
     if ([[NSUserDefaults standardUserDefaults] objectForKey:@"FBAccessTokenKey"]&&[[NSUserDefaults standardUserDefaults]objectForKey:@"fbuname"]){
         [self POST_FB];
         NSString *fbid =[[NSUserDefaults standardUserDefaults]valueForKey:@"fbid"];
@@ -154,11 +155,25 @@
     
     if (data)
     {
-        //NSLog(@"\ndata: %@ \nstring: %@", data, [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding]);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error1];
         NSLog(@"json is %@",json);
+        NSDictionary *maindata=[json objectForKey:@"maindata"];
         NSDictionary *personalData=[json objectForKey:@"personal_data"];
-        NSString *accessToken=[personalData valueForKey:@"access_token"];
+        dateCreatedArray=[maindata valueForKey:@"date_created"];
+        gameIdArray=[maindata valueForKey:@"game_id"];
+        gameStatusArray=[maindata valueForKey:@"game_status"];
+        oppImageArray=[maindata valueForKey:@"opponent_image"];
+        oppNameArray=[maindata valueForKey:@"opponent_name"];
+        userStatusArray=[maindata valueForKey:@"user_status"];
+        userTurnArray=[maindata valueForKey:@"user_turn"];
+        userTurnDataArray=[maindata valueForKey:@"user_turn_data"];
+        numberOfGames=[personalData valueForKey:@"no of games"];
+        userName=[personalData valueForKey:@"user_name"];
+        [[NSUserDefaults standardUserDefaults] setValue:userName forKey:@"userName"];
+        userImage=[personalData valueForKey:@"user_image"];
+
+        accessToken=[personalData valueForKey:@"access_token"];
+        NSLog(@"accessToken=%@",accessToken);
         [[NSUserDefaults standardUserDefaults] setValue:accessToken forKey:@"access_token"];
         NSString *error=[json valueForKey:@"error"];
         if(accessToken)
@@ -208,10 +223,20 @@
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error1];
         NSLog(@"json is %@",json);
         NSString *error=[json valueForKey:@"error"];
+        NSDictionary *maindata=[json objectForKey:@"maindata"];
         NSDictionary *personalData=[json objectForKey:@"personal_data"];
+        dateCreatedArray=[maindata valueForKey:@"date_created"];
+        gameIdArray=[maindata valueForKey:@"game_id"];
+        gameStatusArray=[maindata valueForKey:@"game_status"];
+        oppImageArray=[maindata valueForKey:@"opponent_image"];
+        oppNameArray=[maindata valueForKey:@"opponent_name"];
+        userStatusArray=[maindata valueForKey:@"user_status"];
+        userTurnArray=[maindata valueForKey:@"user_turn"];
+        userTurnDataArray=[maindata valueForKey:@"user_turn_data"];
         numberOfGames=[personalData valueForKey:@"no of games"];
-        
-        
+        userName=[personalData valueForKey:@"user_name"];
+        [[NSUserDefaults standardUserDefaults] setValue:userName forKey:@"userName"];
+        userImage=[personalData valueForKey:@"user_image"];
         if([[NSUserDefaults standardUserDefaults]objectForKey:@"access_token"])
         {
             [self performSegueWithIdentifier:@"gameSummary" sender:self];
@@ -234,12 +259,7 @@
         [alert show];
         //  [self hideActivityIndicater];
     }
-    
-    
-    
-    
-    
-    
+   
 }
 
 

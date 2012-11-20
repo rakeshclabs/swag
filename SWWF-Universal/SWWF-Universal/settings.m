@@ -7,6 +7,7 @@
 //
 
 #import "settings.h"
+#import <AudioToolbox/AudioServices.h>
 
 @interface settings ()
 
@@ -64,13 +65,16 @@
 }
 - (IBAction)vibration:(id)sender
 {
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
    if(vibration)
    {
+       [[NSUserDefaults standardUserDefaults]setBool:FALSE forKey:@"Vibration"];
        vibrationImageView.image=[UIImage imageNamed:@"off.png"];
        vibration=FALSE;
    }
    else
    {
+       [[NSUserDefaults standardUserDefaults]setBool:TRUE forKey:@"Vibration"];
        vibrationImageView.image=[UIImage imageNamed:@"on.png"];
        vibration=TRUE;
    }
@@ -94,5 +98,63 @@
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
+- (IBAction)feedback:(id)sender
+{
+    [self Email];
+}
+
+- (void)Email
+{
+    if ([MFMailComposeViewController canSendMail])
+        
+    {
+        
+        MFMailComposeViewController *mailer = [[MFMailComposeViewController alloc] init];
+        mailer.mailComposeDelegate = self;
+        [mailer setSubject:@"Feedback"];
+       // NSArray *toRecipients = [NSArray arrayWithObjects:@"gtcserver@gmail.com",nil];
+      //  [mailer setToRecipients:toRecipients];
+                
+        NSString *emailBody = nil;
+        [mailer setMessageBody:emailBody isHTML:NO];
+        [self presentModalViewController:mailer animated:YES];
+    }
+    
+    else
+        
+    {
+        
+        UIAlertView *Alert = [[UIAlertView alloc] initWithTitle:@"Failure"message:@"Your device doesn't support the composer sheet" delegate:nil cancelButtonTitle:@"OK"otherButtonTitles:nil];
+        
+        [Alert show];
+        
+    }
+}
+-(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
+    
+    
+    switch (result) {
+        case MFMailComposeResultCancelled:
+            NSLog(@"mail cancelled");
+            break;
+        case MFMailComposeResultSent:
+            NSLog(@"mail sent");
+            break;
+        case MFMailComposeResultSaved:
+            NSLog(@"mail saved");
+            break;
+        case MFMailComposeResultFailed:
+            NSLog(@"error,mail not sent");
+            break;
+            
+        default:NSLog(@"mail not sent");
+            break;
+    }
+    
+    [self dismissModalViewControllerAnimated:YES];
+    
+}
+
+
 
 @end

@@ -11,6 +11,7 @@
 @interface subOpponent : UIViewController
 {
     IBOutlet UIImageView *imageBox;
+    IBOutlet UITextField *nameField;
     
 }
 - (IBAction)startButton:(id)sender;
@@ -18,4 +19,5 @@
 - (IBAction)settingButton:(id)sender;
 @property (strong, nonatomic) IBOutlet UIImageView *imageBox;
 @property (strong,nonatomic) NSString *image;
+@property (strong,nonatomic) NSString *gameMode;
 @end

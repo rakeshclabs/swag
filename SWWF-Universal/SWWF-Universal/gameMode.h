@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface gameMode : UIViewController
-
+@property (strong,nonatomic) NSString *gameMode;
 @end

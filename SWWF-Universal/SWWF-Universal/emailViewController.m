@@ -8,6 +8,7 @@
 
 #import "emailViewController.h"
 #import "UsernameViewController.h"
+#import "gameSummary.h"
 #define kOFFSET_FOR_KEYBOARD 172.0
 
 
@@ -16,7 +17,8 @@
 @end
 
 @implementation emailViewController
-
+@synthesize accessToken,userName,userImage;
+@synthesize gameIdArray,userStatusArray,userTurnArray,gameStatusArray,userTurnDataArray,oppImageArray,oppNameArray,dateCreatedArray;
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -26,6 +28,24 @@
         un.emailId=idField.text;
         
     }
+    
+    else if([segue.identifier isEqualToString:@"gameSummary"])
+    {
+        gameSummary *gs=[segue destinationViewController];
+        gs.numberOfGames=numberOfGames;
+        gs.gameStatusArray=self.gameStatusArray;
+        gs.gameIdArray=self.gameIdArray;
+        gs.userTurnArray=self.userTurnArray;
+        gs.userStatusArray=self.userStatusArray;
+        gs.userTurnDataArray=self.userTurnDataArray;
+        gs.oppNameArray=self.oppNameArray;
+        gs.oppImageArray=self.oppImageArray;
+        gs.dateCreatedArray=self.dateCreatedArray;
+        gs.accessToken=self.accessToken;
+        gs.userName=self.userName;
+        gs.userImage=self.userImage;
+    }
+    
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -39,6 +59,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    gameIdArray=[[NSMutableArray alloc]init];
+    userStatusArray=[[NSMutableArray alloc]init];
+    userTurnArray=[[NSMutableArray alloc]init];
+    userTurnDataArray=[[NSMutableArray alloc]init];
+    oppImageArray=[[NSMutableArray alloc]init];
+    oppNameArray=[[NSMutableArray alloc]init];
+    dateCreatedArray=[[NSMutableArray alloc]init];
+    gameStatusArray=[[NSMutableArray alloc]init];
+
 	// Do any additional setup after loading the view.
 }
 
@@ -64,6 +93,7 @@
    [idField resignFirstResponder];
     NSLog(@"emailId=%@",idField.text);
     NSString *emailid = idField.text;
+    [[NSUserDefaults standardUserDefaults]setValue:emailid forKey:@"emailId"];
     // Checking email address is valid or not
     NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
     NSPredicate *emailTest =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
@@ -93,7 +123,20 @@
         NSString *newreg;
         if (data)
         {
+            NSDictionary *maindata=[json objectForKey:@"maindata"];
             NSDictionary *personalData=[json objectForKey:@"personal_data"];
+            dateCreatedArray=[maindata valueForKey:@"date_created"];
+            gameIdArray=[maindata valueForKey:@"game_id"];
+            gameStatusArray=[maindata valueForKey:@"game_status"];
+            oppImageArray=[maindata valueForKey:@"opponent_image"];
+            oppNameArray=[maindata valueForKey:@"opponent_name"];
+            userStatusArray=[maindata valueForKey:@"user_status"];
+            userTurnArray=[maindata valueForKey:@"user_turn"];
+            userTurnDataArray=[maindata valueForKey:@"user_turn_data"];
+            numberOfGames=[personalData valueForKey:@"no of games"];
+            userName=[personalData valueForKey:@"user_name"];
+            [[NSUserDefaults standardUserDefaults] setValue:userName forKey:@"userName"];
+            userImage=[personalData valueForKey:@"user_image"];
             newreg=[json valueForKey:@"error"];
             if(newreg)  //if First Time Login with emailID and
             {
@@ -101,10 +144,10 @@
             }
            else         //Already account created via email Id
             {
-                NSString *accessToken=[personalData valueForKey:@"access_token"];
+                accessToken=[personalData valueForKey:@"access_token"];
                 NSLog(@"Access token=%@",accessToken);
                 [[NSUserDefaults standardUserDefaults] setObject:accessToken forKey:@"access_token"];
-                 [[NSUserDefaults standardUserDefaults]synchronize];
+                [[NSUserDefaults standardUserDefaults]synchronize];
                 [self performSegueWithIdentifier:@"gameSummary" sender:self];
             }
         }
