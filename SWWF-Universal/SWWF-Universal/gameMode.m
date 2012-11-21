@@ -8,6 +8,7 @@
 
 #import "gameMode.h"
 #import "selectOpponent.h"
+#import "SVProgressHUD.h"
 
 @interface gameMode ()
 
@@ -26,6 +27,7 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    [self HideActivityIndicator];
     selectOpponent *so=[segue destinationViewController];
     so.gameMode=self.gameMode;
 }
@@ -47,6 +49,7 @@
 }
 - (IBAction)swagMode:(id)sender 
 {
+    [self ShowActivityIndicatorWithTitle:@"Loading..."];
     self.gameMode=@"swag";
     [[NSUserDefaults standardUserDefaults]setValue:self.gameMode forKey:@"gameMode"];
     [self performSegueWithIdentifier:@"opponent" sender:self];
@@ -54,6 +57,7 @@
 }
 - (IBAction)mixedMode:(id)sender 
 {
+    [self ShowActivityIndicatorWithTitle:@"Loading..."];
     self.gameMode=@"mixed";
     [[NSUserDefaults standardUserDefaults]setValue:self.gameMode forKey:@"gameMode"];
 
@@ -65,7 +69,20 @@
 }
 - (IBAction)settings:(id)sender 
 {
+    [self ShowActivityIndicatorWithTitle:@"Loading..."];
     [self performSegueWithIdentifier:@"settings" sender:self];
+}
+
+/*---------------- Activity Indicator -------------------------------------*/
+-(void)ShowActivityIndicatorWithTitle:(NSString *)Title{
+    
+    [SVProgressHUD showWithStatus:Title maskType:SVProgressHUDMaskTypeGradient];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    
+}
+
+-(void)HideActivityIndicator{
+    [SVProgressHUD dismiss];
 }
 
 @end

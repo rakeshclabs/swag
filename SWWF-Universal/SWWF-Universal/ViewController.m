@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "SVProgressHUD.h"
 
 @interface ViewController ()
 @property (nonatomic, strong) UIImageView *imageView;
@@ -1064,6 +1065,7 @@
 
 - (IBAction)play:(id)sender
 {
+    [self ShowActivityIndicatorWithTitle:@"Checking..."];
 /*---------------- sorting location Array ----------------------*/
     sortedLocArray = [locArray sortedArrayUsingComparator: ^(id obj1, id obj2)
     {
@@ -1100,6 +1102,7 @@
             {
                 UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [alert show];
+                [self HideActivityIndicator];
                 break;
             }
         }
@@ -1123,6 +1126,7 @@
              {
                  UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                  [alert show];
+                 [self HideActivityIndicator];
                  break;
              }
          }
@@ -1132,6 +1136,7 @@
     {
           UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
           [alert show];
+        [self HideActivityIndicator];
     }
 
     
@@ -1229,11 +1234,13 @@
              UIAlertView *alert=[[UIAlertView alloc]initWithTitle:nil message:[NSString stringWithFormat:@"Send Move to %@ ?",self.opponentNameString] delegate:self cancelButtonTitle:@"Cancel Move" otherButtonTitles:@"Send Move",nil];
              [alert show];
              alert.tag=1;
+             [self HideActivityIndicator];
          }
          else if(invalideWords)
          {
              UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:[NSString stringWithFormat:@"Sorry,'%@' may be misspelled or may be a proper noun",invalideWords] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
              [alert show];
+             [self HideActivityIndicator];
          NSLog(@"Invalid Words=%@",invalideWords);
              [buttonCharArray removeAllObjects];
              [buttonCoinArray removeAllObjects];
@@ -1249,6 +1256,7 @@
     {
         if(buttonIndex==1)
         {
+            [self ShowActivityIndicatorWithTitle:@"Sending..."];
             NSLog(@"Word Send");
             NSLog(@"game id=%@",self.gameId);
             NSLog(@"game Character=%@",gameCharacter);
@@ -1286,6 +1294,7 @@
                 [self DataBase];
                 [self scrableBoard];
                 userScore.text=[NSString stringWithFormat:@"%d",totalPoint];
+                [self HideActivityIndicator];
                 
             }
                         
@@ -1309,5 +1318,17 @@
 }
 
 - (IBAction)resign:(id)sender {
+}
+
+/*---------------- Activity Indicator -------------------------------------*/
+-(void)ShowActivityIndicatorWithTitle:(NSString *)Title{
+    
+    [SVProgressHUD showWithStatus:Title maskType:SVProgressHUDMaskTypeGradient];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    
+}
+
+-(void)HideActivityIndicator{
+    [SVProgressHUD dismiss];
 }
 @end

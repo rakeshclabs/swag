@@ -9,6 +9,7 @@
 #import "emailViewController.h"
 #import "UsernameViewController.h"
 #import "gameSummary.h"
+#import "SVProgressHUD.h"
 #define kOFFSET_FOR_KEYBOARD 172.0
 
 
@@ -90,7 +91,9 @@
 
 - (IBAction)connectButton:(id)sender
 {
-   [idField resignFirstResponder];
+    [self ShowActivityIndicatorWithTitle:@"Loading..."];
+    [idField resignFirstResponder];
+   
     NSLog(@"emailId=%@",idField.text);
     NSString *emailid = idField.text;
     [[NSUserDefaults standardUserDefaults]setValue:emailid forKey:@"emailId"];
@@ -102,6 +105,7 @@
     {
         UIAlertView *alertView1 = [[UIAlertView alloc]initWithTitle:@"Invalid email format" message:@""  delegate:self cancelButtonTitle:@"   Cancel   " otherButtonTitles:nil, nil ];
         [alertView1 show];
+        [self HideActivityIndicator];
     }
     else //Valid
     {
@@ -140,6 +144,7 @@
             newreg=[json valueForKey:@"error"];
             if(newreg)  //if First Time Login with emailID and
             {
+                [self HideActivityIndicator];
                 [self performSegueWithIdentifier:@"connect" sender:self];
             }
            else         //Already account created via email Id
@@ -148,6 +153,7 @@
                 NSLog(@"Access token=%@",accessToken);
                 [[NSUserDefaults standardUserDefaults] setObject:accessToken forKey:@"access_token"];
                 [[NSUserDefaults standardUserDefaults]synchronize];
+                [self HideActivityIndicator];
                 [self performSegueWithIdentifier:@"gameSummary" sender:self];
             }
         }
@@ -157,6 +163,7 @@
             NSLog(@"\n\n Error to get json=%@",output);
             UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"" message:@"Could not connect to the server, please check your internet connection !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
             [alert show];
+            [self HideActivityIndicator];
         }
     }
 }
@@ -236,4 +243,15 @@
     }
 }
 /*------------------------------------------------------------------------*/
+/*---------------- Activity Indicator -------------------------------------*/
+-(void)ShowActivityIndicatorWithTitle:(NSString *)Title{
+    
+    [SVProgressHUD showWithStatus:Title maskType:SVProgressHUDMaskTypeGradient];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    
+}
+
+-(void)HideActivityIndicator{
+    [SVProgressHUD dismiss];
+}
 @end

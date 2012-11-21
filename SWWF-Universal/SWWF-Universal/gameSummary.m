@@ -8,6 +8,7 @@
 
 #import "gameSummary.h"
 #import "asyncimageview.h"
+#import "SVProgressHUD.h"
 
 @interface gameSummary ()
 
@@ -323,11 +324,27 @@
 
 -(void)startGameAction:(UIButton *)sender
 {
+    [self ShowActivityIndicatorWithTitle:@"Loading..."];
     NSLog(@"tag=%d",sender.tag);
     [self performSegueWithIdentifier:@"startGame" sender:self];
+    [self HideActivityIndicator];
 }
 - (IBAction)settings:(id)sender 
 {
+    [self ShowActivityIndicatorWithTitle:@"Loading...."];
     [self performSegueWithIdentifier:@"settings" sender:self];
+    [self HideActivityIndicator];
+}
+
+/*---------------- Activity Indicator -------------------------------------*/
+-(void)ShowActivityIndicatorWithTitle:(NSString *)Title{
+    
+    [SVProgressHUD showWithStatus:Title maskType:SVProgressHUDMaskTypeGradient];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    
+}
+
+-(void)HideActivityIndicator{
+    [SVProgressHUD dismiss];
 }
 @end

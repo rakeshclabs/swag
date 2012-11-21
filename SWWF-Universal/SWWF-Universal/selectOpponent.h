@@ -20,6 +20,7 @@
     NSString *opponentName;
     NSMutableArray *charArray;
     NSMutableArray *charPointArray;
+    NSMutableArray *fbFriends;
     
     
 }

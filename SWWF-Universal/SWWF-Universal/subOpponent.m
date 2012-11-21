@@ -7,6 +7,8 @@
 //
 
 #import "subOpponent.h"
+#import "ViewController.h"
+#import "SVProgressHUD.h"
 #define kOFFSET_FOR_KEYBOARD 122.0
 
 @interface subOpponent ()
@@ -15,6 +17,23 @@
 
 @implementation subOpponent
 @synthesize image,imageBox,gameMode,oppName;
+
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    [self HideActivityIndicator];
+    if([segue.identifier isEqualToString:@"game"])
+    {
+        ViewController *vc=[segue destinationViewController];
+        vc.remainingLettersString=@"90";
+        vc.opponentNameString=self.oppName;
+        vc.userScoreString=@"00";
+        vc.opponentScoreString=@"00";
+        vc.gameId=gameId;
+        vc.charArray=charArray;
+        vc.charPointArray=charPointArray;
+    }
+}
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -30,6 +49,12 @@
 {
     [super viewDidLoad];
     imageBox.image=[UIImage imageNamed:self.image];
+    if([self.image isEqualToString:@"usernameBox.png"])
+    {
+        UIImageView *facebookImage=[[UIImageView alloc]init];
+        
+    }
+        
 	// Do any additional setup after loading the view.
 }
 
@@ -47,70 +72,88 @@
 }
 - (IBAction)startButton:(id)sender
 {
-    NSString *uname=@"ashish";
-    NSString *post =[NSString stringWithFormat:@"random=0&access_token=%@&uname=%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"access_token"],uname];
-    NSLog(@"AccessToken=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"access_token"]);
+    [self ShowActivityIndicatorWithTitle:@"Loading..."];
+    if([self.image isEqualToString:@"usernameBox.png"])
+    {
+        [nameField resignFirstResponder];
+        if(![nameField.text isEqualToString:@""])
+        {
+            NSString *uname=nameField.text;
+            NSString *post =[NSString stringWithFormat:@"random=0&access_token=%@&uname=%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"access_token"],uname];
+            NSLog(@"AccessToken=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"access_token"]);
     
-    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+            NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
     
-    NSString *postLength = [NSString stringWithFormat:@"%d", [postData length]];
+            NSString *postLength = [NSString stringWithFormat:@"%d", [postData length]];
     
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init] ;
+            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init] ;
     
-    [request setURL:[NSURL URLWithString:@"http://23.23.78.187/swwf/create_game.php"]];
+            [request setURL:[NSURL URLWithString:@"http://23.23.78.187/swwf/create_game.php"]];
     
-    [request setHTTPMethod:@"POST"];
+            [request setHTTPMethod:@"POST"];
     
-    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+            [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
     
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+            [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     
-    [request setHTTPBody:postData];
+            [request setHTTPBody:postData];
     
-    NSError *error1 = nil;
+            NSError *error1 = nil;
     
-    NSURLResponse *response = nil;
+            NSURLResponse *response = nil;
     
-    NSData *data = [NSURLConnection sendSynchronousRequest:request
+            NSData *data = [NSURLConnection sendSynchronousRequest:request
                                          returningResponse:&response
                                                      error:&error1];
     
-    if (data)
-    {
-        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error1];
-        NSLog(@"%@",json);
-        if([json objectForKey:@"error"])
-        {
-            UIAlertView *a=[[UIAlertView alloc]initWithTitle:@"" message:[json valueForKey:@"error"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-            [a show];
-        }
-        NSString *nouser=[json valueForKey:@"nouser"];
-        
-        if(nouser)
-        {
-            UIAlertView *Alert=[[UIAlertView alloc]initWithTitle:@"" message:nouser delegate:@"nil" cancelButtonTitle:@"OK" otherButtonTitles: nil];
-            [Alert show];
+            if (data)
+            {
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error1];
+                NSLog(@"%@",json);
+                NSString *nouser=[json valueForKey:@"nouser"];
+                if([json objectForKey:@"error"])
+                {
+                    UIAlertView *a=[[UIAlertView alloc]initWithTitle:@"" message:[json valueForKey:@"error"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                    [a show];
+                    nameField.text=@"";
+                    [self HideActivityIndicator];
+                }
+                else if(nouser)
+                {
+                    UIAlertView *Alert=[[UIAlertView alloc]initWithTitle:@"" message:nouser delegate:@"nil" cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                    [Alert show];
+                    [self HideActivityIndicator];
+                }
+                else
+                {
+                    NSDictionary *Char=[json objectForKey:@"character_data"];
+                    NSDictionary *gameData=[json objectForKey:@"game_data"];
+                    charArray=[Char valueForKey:@"name"];
+                    charPointArray=[Char valueForKey:@"coins"];
+                    self.oppName=[gameData valueForKey:@"opponent_name"];
+                    gameId=[gameData valueForKey:@"game_id"];
+                    NSLog(@"CharArray=%@",charArray);
+                    NSLog(@"CharPointArray=%@",charPointArray);
+                    [self performSegueWithIdentifier:@"game" sender:self];
+                }
+            }
+            else
+            {
+                UIAlertView *a=[[UIAlertView alloc]initWithTitle:@"" message:@"no internet connection" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                [a show];
+                [self HideActivityIndicator];
+            }
         }
         else
         {
-            NSDictionary *Char=[json objectForKey:@"character_data"];
-            NSDictionary *gameData=[json objectForKey:@"game_data"];
-            charArray=[Char valueForKey:@"name"];
-            charPointArray=[Char valueForKey:@"coins"];
-            self.oppName=[gameData valueForKey:@"opponent_name"];
-            gameId=[gameData valueForKey:@"game_id"];
-            NSLog(@"CharArray=%@",charArray);
-            NSLog(@"CharPointArray=%@",charPointArray);
-            
-            
-            [self performSegueWithIdentifier:@"game" sender:self];
+            UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Username" message:@"Please enter opponent name"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];
+            [self HideActivityIndicator];
         }
     }
-     else
-       {
-        UIAlertView *a=[[UIAlertView alloc]initWithTitle:@"" message:@"no internet connection" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-        [a show];
-    
+    else if([self.image isEqualToString:@"facebookBox.png"])
+    {
+        
     }
 }
 
@@ -194,5 +237,15 @@
 
 /*--------------------------------------------------------------*/
 
+/*---------------- Activity Indicator -------------------------------------*/
+-(void)ShowActivityIndicatorWithTitle:(NSString *)Title{
+    
+    [SVProgressHUD showWithStatus:Title maskType:SVProgressHUDMaskTypeGradient];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    
+}
 
+-(void)HideActivityIndicator{
+    [SVProgressHUD dismiss];
+}
 @end

@@ -28,7 +28,6 @@
 		FC8DF21C1648F0A400272304 /* loginView.m in Sources */ = {isa = PBXBuildFile; fileRef = FC8DF21B1648F0A400272304 /* loginView.m */; };
 		FC8F4C2616579B7C00159E56 /* database.m in Sources */ = {isa = PBXBuildFile; fileRef = FC8F4C2516579B7C00159E56 /* database.m */; };
 		FC9549A01654C35200F1F879 /* top-bar.png in Resources */ = {isa = PBXBuildFile; fileRef = FC95499F1654C35200F1F879 /* top-bar.png */; };
-		FC9549A51654C64C00F1F879 /* player-bar.png in Resources */ = {isa = PBXBuildFile; fileRef = FC9549A41654C64C00F1F879 /* player-bar.png */; };
 		FC9549A71654CA4600F1F879 /* S.png in Resources */ = {isa = PBXBuildFile; fileRef = FC9549A61654CA4600F1F879 /* S.png */; };
 		FC95F1AF165A03A000FE7694 /* swagDatabase.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = FC95F1AE165A03A000FE7694 /* swagDatabase.sqlite */; };
 		FC95F1B9165A086D00FE7694 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FC95F1B8165A086D00FE7694 /* libsqlite3.dylib */; };
@@ -62,6 +61,14 @@
 		FC963444164D26C70068DCCC /* startSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = FC963442164D26C60068DCCC /* startSmall.png */; };
 		FC963445164D26C70068DCCC /* startSmallClick.png in Resources */ = {isa = PBXBuildFile; fileRef = FC963443164D26C70068DCCC /* startSmallClick.png */; };
 		FC963448164D27350068DCCC /* subOpponent.m in Sources */ = {isa = PBXBuildFile; fileRef = FC963447164D27340068DCCC /* subOpponent.m */; };
+		FC98D40B165CB14B0001E1FE /* 1n.png in Resources */ = {isa = PBXBuildFile; fileRef = FC98D407165CB14B0001E1FE /* 1n.png */; };
+		FC98D40C165CB14B0001E1FE /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = FC98D408165CB14B0001E1FE /* SVProgressHUD.bundle */; };
+		FC98D40D165CB14B0001E1FE /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = FC98D40A165CB14B0001E1FE /* SVProgressHUD.m */; };
+		FC98D40F165CD4050001E1FE /* facebookPageScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = FC98D40E165CD4050001E1FE /* facebookPageScreen.png */; };
+		FC98D412165CD5AB0001E1FE /* facebookOpponent.m in Sources */ = {isa = PBXBuildFile; fileRef = FC98D411165CD5AA0001E1FE /* facebookOpponent.m */; };
+		FC98D414165CEE240001E1FE /* player-bar.png in Resources */ = {isa = PBXBuildFile; fileRef = FC98D413165CEE240001E1FE /* player-bar.png */; };
+		FC98D416165CF15B0001E1FE /* scrableBoard.png in Resources */ = {isa = PBXBuildFile; fileRef = FC98D415165CF1560001E1FE /* scrableBoard.png */; };
+		FC98D41C165CFDF40001E1FE /* fbCell.png in Resources */ = {isa = PBXBuildFile; fileRef = FC98D41B165CFDF00001E1FE /* fbCell.png */; };
 		FC9D6F68165BA0B5004519F0 /* A.png in Resources */ = {isa = PBXBuildFile; fileRef = FC9D6F61165BA0B5004519F0 /* A.png */; };
 		FC9D6F69165BA0B5004519F0 /* B.png in Resources */ = {isa = PBXBuildFile; fileRef = FC9D6F62165BA0B5004519F0 /* B.png */; };
 		FC9D6F6A165BA0B5004519F0 /* Bfix.png in Resources */ = {isa = PBXBuildFile; fileRef = FC9D6F63165BA0B5004519F0 /* Bfix.png */; };
@@ -88,7 +95,6 @@
 		FC9FC035164B9B3C002BD015 /* twitter-click.png in Resources */ = {isa = PBXBuildFile; fileRef = FC9FC033164B9B3C002BD015 /* twitter-click.png */; };
 		FC9FC036164B9B3C002BD015 /* twitter.png in Resources */ = {isa = PBXBuildFile; fileRef = FC9FC034164B9B3C002BD015 /* twitter.png */; };
 		FCABCC3E164E26E000B0ABE8 /* asyncimageview.m in Sources */ = {isa = PBXBuildFile; fileRef = FCABCC3D164E26E000B0ABE8 /* asyncimageview.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FCABCC42164E581000B0ABE8 /* scrableBoard.png in Resources */ = {isa = PBXBuildFile; fileRef = FCABCC41164E581000B0ABE8 /* scrableBoard.png */; };
 		FCB22E8F164A51030088D48B /* emailScreen.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FCB22E8E164A51030088D48B /* emailScreen.jpg */; };
 		FCB22E92164A52700088D48B /* email-box.png in Resources */ = {isa = PBXBuildFile; fileRef = FCB22E91164A52700088D48B /* email-box.png */; };
 		FCB22E97164A52EE0088D48B /* cancel-click.png in Resources */ = {isa = PBXBuildFile; fileRef = FCB22E93164A52EE0088D48B /* cancel-click.png */; };
@@ -146,7 +152,6 @@
 		FC8F4C2416579B7C00159E56 /* database.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = database.h; sourceTree = "<group>"; };
 		FC8F4C2516579B7C00159E56 /* database.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = database.m; sourceTree = "<group>"; };
 		FC95499F1654C35200F1F879 /* top-bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-bar.png"; sourceTree = "<group>"; };
-		FC9549A41654C64C00F1F879 /* player-bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "player-bar.png"; sourceTree = "<group>"; };
 		FC9549A61654CA4600F1F879 /* S.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = S.png; sourceTree = "<group>"; };
 		FC95F1AE165A03A000FE7694 /* swagDatabase.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = swagDatabase.sqlite; sourceTree = "<group>"; };
 		FC95F1B8165A086D00FE7694 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -181,6 +186,16 @@
 		FC963443164D26C70068DCCC /* startSmallClick.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = startSmallClick.png; sourceTree = "<group>"; };
 		FC963446164D27340068DCCC /* subOpponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = subOpponent.h; sourceTree = "<group>"; };
 		FC963447164D27340068DCCC /* subOpponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = subOpponent.m; sourceTree = "<group>"; };
+		FC98D407165CB14B0001E1FE /* 1n.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1n.png; sourceTree = "<group>"; };
+		FC98D408165CB14B0001E1FE /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
+		FC98D409165CB14B0001E1FE /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
+		FC98D40A165CB14B0001E1FE /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
+		FC98D40E165CD4050001E1FE /* facebookPageScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebookPageScreen.png; sourceTree = "<group>"; };
+		FC98D410165CD5AA0001E1FE /* facebookOpponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facebookOpponent.h; sourceTree = "<group>"; };
+		FC98D411165CD5AA0001E1FE /* facebookOpponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = facebookOpponent.m; sourceTree = "<group>"; };
+		FC98D413165CEE240001E1FE /* player-bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "player-bar.png"; sourceTree = "<group>"; };
+		FC98D415165CF1560001E1FE /* scrableBoard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scrableBoard.png; sourceTree = "<group>"; };
+		FC98D41B165CFDF00001E1FE /* fbCell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fbCell.png; sourceTree = "<group>"; };
 		FC9D6F61165BA0B5004519F0 /* A.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = A.png; sourceTree = "<group>"; };
 		FC9D6F62165BA0B5004519F0 /* B.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = B.png; sourceTree = "<group>"; };
 		FC9D6F63165BA0B5004519F0 /* Bfix.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Bfix.png; sourceTree = "<group>"; };
@@ -208,7 +223,6 @@
 		FC9FC034164B9B3C002BD015 /* twitter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitter.png; sourceTree = "<group>"; };
 		FCABCC3C164E26E000B0ABE8 /* asyncimageview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asyncimageview.h; sourceTree = "<group>"; };
 		FCABCC3D164E26E000B0ABE8 /* asyncimageview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = asyncimageview.m; sourceTree = "<group>"; };
-		FCABCC41164E581000B0ABE8 /* scrableBoard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scrableBoard.png; sourceTree = "<group>"; };
 		FCB22E8E164A51030088D48B /* emailScreen.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = emailScreen.jpg; sourceTree = "<group>"; };
 		FCB22E91164A52700088D48B /* email-box.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "email-box.png"; sourceTree = "<group>"; };
 		FCB22E93164A52EE0088D48B /* cancel-click.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cancel-click.png"; sourceTree = "<group>"; };
@@ -300,6 +314,7 @@
 		FC8DF1E71648D89900272304 /* SWWF-Universal */ = {
 			isa = PBXGroup;
 			children = (
+				FC98D406165CB14B0001E1FE /* SVProgressHUD */,
 				FCABCC3C164E26E000B0ABE8 /* asyncimageview.h */,
 				FCABCC3D164E26E000B0ABE8 /* asyncimageview.m */,
 				FC8DF1F01648D89900272304 /* AppDelegate.h */,
@@ -320,6 +335,8 @@
 				FC8DF20E1648DE2000272304 /* selectOpponent.m */,
 				FC963446164D27340068DCCC /* subOpponent.h */,
 				FC963447164D27340068DCCC /* subOpponent.m */,
+				FC98D410165CD5AA0001E1FE /* facebookOpponent.h */,
+				FC98D411165CD5AA0001E1FE /* facebookOpponent.m */,
 				FC8DF2101648DE4A00272304 /* account.h */,
 				FC8DF2111648DE4A00272304 /* account.m */,
 				FC8DF2131648DE4A00272304 /* settings.h */,
@@ -346,6 +363,17 @@
 				FC8DF1EF1648D89900272304 /* SWWF-Universal-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FC98D406165CB14B0001E1FE /* SVProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				FC98D407165CB14B0001E1FE /* 1n.png */,
+				FC98D408165CB14B0001E1FE /* SVProgressHUD.bundle */,
+				FC98D409165CB14B0001E1FE /* SVProgressHUD.h */,
+				FC98D40A165CB14B0001E1FE /* SVProgressHUD.m */,
+			);
+			path = SVProgressHUD;
 			sourceTree = "<group>";
 		};
 		FC9D6F70165BA0BB004519F0 /* Letters */ = {
@@ -401,8 +429,8 @@
 		FCB43171164A47C9003415EA /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				FCABCC41164E581000B0ABE8 /* scrableBoard.png */,
 				FCB22ECC164A85C50088D48B /* splash.png */,
+				FC98D415165CF1560001E1FE /* scrableBoard.png */,
 				FCB4317C164A4D6E003415EA /* home.jpg */,
 				FCB22E8E164A51030088D48B /* emailScreen.jpg */,
 				FCB22E9B164A53E10088D48B /* usernameScreen.jpg */,
@@ -411,6 +439,7 @@
 				FC96340C164CDDB30068DCCC /* accountScreen.jpg */,
 				FC963436164D09090068DCCC /* settingScreen.jpg */,
 				FC96343C164D21470068DCCC /* faceOppScreen.jpg */,
+				FC98D40E165CD4050001E1FE /* facebookPageScreen.png */,
 				FCB43172164A4A15003415EA /* fb-click.png */,
 				FCB43173164A4A15003415EA /* fb.png */,
 				FCB43174164A4A15003415EA /* login-click.png */,
@@ -428,6 +457,7 @@
 				FC9FC021164B9123002BD015 /* game-over.png */,
 				FC9FC022164B9123002BD015 /* their-turn.png */,
 				FC9FC025164B91AE002BD015 /* cell.png */,
+				FC98D41B165CFDF00001E1FE /* fbCell.png */,
 				FC9FC027164B92BD002BD015 /* Frame.png */,
 				FC9FC029164B9417002BD015 /* line.png */,
 				FC9FC02B164B9727002BD015 /* Start.png */,
@@ -461,7 +491,7 @@
 				FC963442164D26C60068DCCC /* startSmall.png */,
 				FC963443164D26C70068DCCC /* startSmallClick.png */,
 				FC95499F1654C35200F1F879 /* top-bar.png */,
-				FC9549A41654C64C00F1F879 /* player-bar.png */,
+				FC98D413165CEE240001E1FE /* player-bar.png */,
 				FC9D6F70165BA0BB004519F0 /* Letters */,
 			);
 			name = Images;
@@ -582,9 +612,7 @@
 				FC963441164D217E0068DCCC /* usernameBox.png in Resources */,
 				FC963444164D26C70068DCCC /* startSmall.png in Resources */,
 				FC963445164D26C70068DCCC /* startSmallClick.png in Resources */,
-				FCABCC42164E581000B0ABE8 /* scrableBoard.png in Resources */,
 				FC9549A01654C35200F1F879 /* top-bar.png in Resources */,
-				FC9549A51654C64C00F1F879 /* player-bar.png in Resources */,
 				FC9549A71654CA4600F1F879 /* S.png in Resources */,
 				FC95F1AF165A03A000FE7694 /* swagDatabase.sqlite in Resources */,
 				FC9D6F68165BA0B5004519F0 /* A.png in Resources */,
@@ -594,6 +622,12 @@
 				FC9D6F6C165BA0B5004519F0 /* G.png in Resources */,
 				FC9D6F6D165BA0B5004519F0 /* J.png in Resources */,
 				FC9D6F6E165BA0B5004519F0 /* Jfix.png in Resources */,
+				FC98D40B165CB14B0001E1FE /* 1n.png in Resources */,
+				FC98D40C165CB14B0001E1FE /* SVProgressHUD.bundle in Resources */,
+				FC98D40F165CD4050001E1FE /* facebookPageScreen.png in Resources */,
+				FC98D414165CEE240001E1FE /* player-bar.png in Resources */,
+				FC98D416165CF15B0001E1FE /* scrableBoard.png in Resources */,
+				FC98D41C165CFDF40001E1FE /* fbCell.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -621,6 +655,8 @@
 				FC963448164D27350068DCCC /* subOpponent.m in Sources */,
 				FCABCC3E164E26E000B0ABE8 /* asyncimageview.m in Sources */,
 				FC8F4C2616579B7C00159E56 /* database.m in Sources */,
+				FC98D40D165CB14B0001E1FE /* SVProgressHUD.m in Sources */,
+				FC98D412165CD5AB0001E1FE /* facebookOpponent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
