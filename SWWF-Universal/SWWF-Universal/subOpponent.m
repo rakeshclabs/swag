@@ -49,11 +49,7 @@
 {
     [super viewDidLoad];
     imageBox.image=[UIImage imageNamed:self.image];
-    if([self.image isEqualToString:@"usernameBox.png"])
-    {
-        UIImageView *facebookImage=[[UIImageView alloc]init];
-        
-    }
+   
         
 	// Do any additional setup after loading the view.
 }

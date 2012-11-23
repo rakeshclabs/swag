@@ -13,8 +13,15 @@
 {
     AsyncImageView *asyncImageView;
     NSMutableArray *imageArray;
+    NSMutableArray *charArray;
+    NSMutableArray *charPointArray;
+    NSString *gameId;
 }
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property(strong,nonatomic)NSArray *fbFriends;
+@property (strong,nonatomic) NSString *gameMode;
+@property(strong,nonatomic) NSString *oppName;
+- (IBAction)backAction:(id)sender;
+- (IBAction)settings:(id)sender;
 
 @end

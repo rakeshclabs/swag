@@ -35,9 +35,8 @@
     NSString *gameWord;
     NSString *gameCharacter;
     NSString *gameCharPos;
+    NSMutableString *prevWord;
     NSMutableArray *locArray;
-    
-    
     NSMutableArray *imageLocArray;
     NSMutableArray *imageCharArray;
     NSMutableArray *imageCoinArray;
@@ -46,14 +45,19 @@
     NSMutableArray *buttonCoinArray;
     NSMutableArray *fixedLocArray;
     NSMutableArray *fixedCharArray;
+    NSMutableArray *wordsArray;
     NSArray *sortedLocArray;
     NSString *currentChar;
     NSString *currentPoint;
     NSString *validWord;
+    NSString *First;
+    NSMutableString *myWord;
     
     sqlite3 *swagDB;
     NSString *databasePath;
     database *path;
+    int prevCounter;
+    int prevCounterVertical;
 }
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 

@@ -853,6 +853,9 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="backAction:" destination="mw3-bi-VEt" eventType="touchUpInside" id="hQM-4X-Nys"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="AbS-qh-dU3">
                                 <rect key="frame" x="282" y="20" width="38" height="44"/>
@@ -865,6 +868,9 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="settings:" destination="mw3-bi-VEt" eventType="touchUpInside" id="9FP-Z6-2mP"/>
+                                </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="1YC-wF-q9E">
                                 <rect key="frame" x="37" y="172" width="245" height="243"/>
@@ -882,6 +888,8 @@
                     <navigationItem key="navigationItem" id="wkd-PR-yd1"/>
                     <connections>
                         <outlet property="tableView" destination="1YC-wF-q9E" id="KjM-K2-7MY"/>
+                        <segue destination="vfW-oW-rzt" kind="push" identifier="setting" id="5ba-QP-fHF"/>
+                        <segue destination="9gM-yh-7U9" kind="push" identifier="game" id="yvm-Vq-hZ3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="caz-ar-HR4" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1156,7 +1164,8 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="v0R-BJ-tL2"/>
-        <segue reference="JaO-wv-A7v"/>
         <segue reference="o4u-R3-wzv"/>
+        <segue reference="yvm-Vq-hZ3"/>
+        <segue reference="5ba-QP-fHF"/>
     </inferredMetricsTieBreakers>
 </document>

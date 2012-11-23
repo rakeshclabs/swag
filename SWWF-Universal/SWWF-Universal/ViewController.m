@@ -45,12 +45,12 @@
     buttonCoinArray=[[NSMutableArray alloc]init];
     fixedLocArray=[[NSMutableArray alloc]init];
     fixedCharArray=[[NSMutableArray alloc]init];
-    
+    wordsArray=[[NSMutableArray alloc]init];
+    prevWord=[[NSMutableString alloc]init];
+    myWord=[[NSMutableString alloc]init];
     path = [[database alloc]init];
     databasePath = path.dataFilePath;
-
     [self DataBase];
-      
     [self scrableBoard];
     
     // Tell the scroll view the size of the contents
@@ -63,7 +63,6 @@
     twoFingerTapRecognizer.numberOfTapsRequired = 1;
     twoFingerTapRecognizer.numberOfTouchesRequired = 2;
     [self.scrollView addGestureRecognizer:twoFingerTapRecognizer];
-    
     userScore.text=self.userScoreString;
     opponentScore.text=self.opponentScoreString;
     userName.text=[[NSUserDefaults standardUserDefaults]valueForKey:@"userName"];
@@ -114,6 +113,19 @@
             {
                 NSLog(@"Failed to delete contact");
             }
+            
+            insertSQL = [NSString stringWithFormat:@"DELETE FROM FIXED"];
+            insert_stmt = [insertSQL UTF8String];
+            
+            sqlite3_prepare_v2(swagDB, insert_stmt,-1, &statement, NULL);
+            if (sqlite3_step(statement) == SQLITE_DONE)
+            {
+                NSLog(@"record deleted");
+            } else
+            {
+                NSLog(@"Failed to delete contact");
+            }
+
         }
         /*----------------Creating Tables if not exist---------------------------------*/
         if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
@@ -143,6 +155,17 @@
                 NSLog(@"BUTTON Table Created");
             }
             
+            querySQL = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS FIXED(LOC TEXT, CHAR TEXT, COIN TEXT)"];
+            sql_stmt = [querySQL UTF8String];
+            if (sqlite3_exec(swagDB, sql_stmt, NULL, NULL, &errMsg) != SQLITE_OK)
+            {
+                NSLog(@"Failed to create table");
+            }
+            else
+            {
+                NSLog(@"FIXED Table Created");
+            }
+
             sqlite3_close(swagDB);
             
         } else
@@ -167,6 +190,18 @@
                 NSLog(@"Failed to add contact");
             }
         }
+        
+        NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO FIXED(LOC, CHAR, COIN) VALUES('91', 'F','5'),('92', 'A','5'),('94', 'E','5'),('106', 'B','5'),('107', 'L','5'),('124', 'O','5'),('125', 'T','5')"];
+        const char *insert_stmt = [insertSQL UTF8String];
+        sqlite3_prepare_v2(swagDB, insert_stmt,-1, &statement, NULL);
+        if (sqlite3_step(statement) == SQLITE_DONE)
+        {
+            NSLog(@"Record added");
+            
+        } else {
+            NSLog(@"Failed to add contact");
+        }
+        
         sqlite3_finalize(statement);
         sqlite3_close(swagDB);
     }
@@ -1065,6 +1100,16 @@
 
 - (IBAction)play:(id)sender
 {
+    [fixedLocArray addObject:@"91"];
+    [fixedLocArray addObject:@"92"];
+    [fixedLocArray addObject:@"94"];
+    [fixedLocArray addObject:@"106"];
+    [fixedLocArray addObject:@"107"];
+    [fixedLocArray addObject:@"124"];
+    [fixedLocArray addObject:@"125"];
+   
+    
+
     [self ShowActivityIndicatorWithTitle:@"Checking..."];
 /*---------------- sorting location Array ----------------------*/
     sortedLocArray = [locArray sortedArrayUsingComparator: ^(id obj1, id obj2)
@@ -1082,67 +1127,504 @@
     NSLog(@"locarray=%@",locArray);
     NSLog(@"Sorted Array=%@",sortedLocArray);
     
-/*-------------------------- Checking Valid and Invalid tile placement ----------------------*/
-    NSString *First=[sortedLocArray objectAtIndex:0];
+    First=[sortedLocArray objectAtIndex:0];
     NSString *second=[sortedLocArray objectAtIndex:1];
+    
+    if(First.intValue+1==second.intValue)
+    {
+        for(int i=0;i<sortedLocArray.count;i++)
+        {
+            First=[sortedLocArray objectAtIndex:i];
+            if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue-15]])
+            {
+                [self VerticalPreviousChar:First.intValue-15];
+            }
+            
+            sqlite3_stmt    *statement;
+            const char *dbpath = [databasePath UTF8String];
+            if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+            {
+                NSString *querySQL;
+                const char *query_stmt;
+                querySQL = [NSString stringWithFormat:@"SELECT * FROM BUTTON WHERE LOC=\'%d\'",First.intValue];
+                query_stmt = [querySQL UTF8String];
+                if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+                {
+                    
+                    while(sqlite3_step(statement) == SQLITE_ROW)
+                    {
+                        [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
+                        totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
+                        NSLog(@"myWord=%@",myWord);
+                        NSLog(@"total point=%d",totalPoint);
+                    }
+                    sqlite3_finalize(statement);
+                }
+            }
+
+            
+            if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue+15]])
+            {
+                  [self VerticalNextChar:First.intValue+15];
+            }
+            [wordsArray addObject:myWord];
+            myWord=[[NSMutableString alloc]init];
+            
+        }
+    }
+    
+    else if(First.intValue+15==second.intValue)
+    {
+        for(int i=0;i<sortedLocArray.count;i++)
+        {
+            First=[sortedLocArray objectAtIndex:i];
+            NSLog(@"First=%@",First);
+            if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue-1]])
+            {
+                [self HorizantalPreviousChar:First.intValue-1];
+            }
+            
+            sqlite3_stmt    *statement;
+            const char *dbpath = [databasePath UTF8String];
+            if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+            {
+                NSString *querySQL;
+                const char *query_stmt;
+                querySQL = [NSString stringWithFormat:@"SELECT * FROM BUTTON WHERE LOC=\'%d\'",First.intValue];
+                query_stmt = [querySQL UTF8String];
+                if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+                {
+                    
+                    while(sqlite3_step(statement) == SQLITE_ROW)
+                    {
+                        [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
+                        totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
+                        NSLog(@"myWord=%@",myWord);
+                        NSLog(@"total point=%d",totalPoint);
+                    }
+                    sqlite3_finalize(statement);
+                }
+            }
+
+            if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue+1]])
+            {
+                
+                [self HorizantalNextChar:First.intValue+1];
+            }
+            [wordsArray addObject:myWord];
+            myWord=[[NSMutableString alloc]init];
+            
+        }
+    }
+
+    
+    NSLog(@"wordsArray=%@",wordsArray);
+
+    
+}
+
+-(NSString *)CheckWord:(int)loc1
+{
+    /*-------------------------- Checking Valid and Invalid tile placement ----------------------*/
+    First=[NSString stringWithFormat:@"%d",loc1];
+    NSString *second=[sortedLocArray objectAtIndex:1];
+    
+    if([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue-1]])
+    {
+        [self HorizantalPreviousChar:First.intValue-1];
+    }
+    if([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue-15]])
+    {
+        [self VerticalPreviousChar:First.intValue-15];
+    }
+    
+    if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue+1]])
+    {
+        sqlite3_stmt    *statement;
+        
+        const char *dbpath = [databasePath UTF8String];
+        if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+        {
+            NSString *querySQL;
+            const char *query_stmt;
+            querySQL = [NSString stringWithFormat:@"SELECT * FROM BUTTON WHERE LOC=\'%d\'",First.intValue];
+            query_stmt = [querySQL UTF8String];
+            if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+            {
+                
+                while(sqlite3_step(statement) == SQLITE_ROW)
+                {
+                    [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
+                    totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
+                    NSLog(@"myWord=%@",myWord);
+                    NSLog(@"total point=%d",totalPoint);
+                }
+                sqlite3_finalize(statement);
+            }
+        }
+        [self HorizantalNextChar:First.intValue+1];
+    }
+    
+    if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue+15]])
+    {
+        sqlite3_stmt    *statement;
+        
+        const char *dbpath = [databasePath UTF8String];
+        if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+        {
+            NSString *querySQL;
+            const char *query_stmt;
+            querySQL = [NSString stringWithFormat:@"SELECT * FROM BUTTON WHERE LOC=\'%d\'",First.intValue];
+            query_stmt = [querySQL UTF8String];
+            if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+            {
+                
+                while(sqlite3_step(statement) == SQLITE_ROW)
+                {
+                    [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
+                    totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
+                    NSLog(@"myWord=%@",myWord);
+                    NSLog(@"total point=%d",totalPoint);
+                }
+                sqlite3_finalize(statement);
+            }
+        }
+        [self VerticalNextChar:First.intValue+15];
+    }
+    
     if(First.intValue+15==second.intValue)  //Checking Vertically
     {
         for (int i=1; i<sortedLocArray.count; i++)
         {
             second=[sortedLocArray objectAtIndex:i];
+            NSLog(@"First=%@",First);
+            NSLog(@"Second=%@",second);
+            sqlite3_stmt    *statement;
+            
+            const char *dbpath = [databasePath UTF8String];
+            if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+            {
+                NSString *querySQL;
+                const char *query_stmt;
+                querySQL = [NSString stringWithFormat:@"SELECT * FROM BUTTON WHERE LOC=\'%d\'",First.intValue];
+                query_stmt = [querySQL UTF8String];
+                if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+                {
+                    
+                    while(sqlite3_step(statement) == SQLITE_ROW)
+                    {
+                        [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
+                        totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
+                        NSLog(@"myWord=%@",myWord);
+                        NSLog(@"total point=%d",totalPoint);
+                    }
+                    sqlite3_finalize(statement);
+                }
+            }
+            
+            
+            
+            
             if(First.intValue+15==second.intValue)
             {
                 First=second;
                 if(i==sortedLocArray.count-1)
                 {
-                   [self validWords]; 
+                    if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+                    {
+                        NSString *querySQL;
+                        const char *query_stmt;
+                        querySQL = [NSString stringWithFormat:@"SELECT * FROM BUTTON WHERE LOC=\'%d\'",second.intValue];
+                        query_stmt = [querySQL UTF8String];
+                        if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+                        {
+                            
+                            while(sqlite3_step(statement) == SQLITE_ROW)
+                            {
+                                [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
+                                totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
+                                NSLog(@"myWord=%@",myWord);
+                                NSLog(@"total point=%d",totalPoint);
+                            }
+                            sqlite3_finalize(statement);
+                        }
+                    }
+                    if([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue+15]])
+                    {
+                        [self VerticalNextChar:First.intValue+15];
+                    }
+                    
+                   // [self validWords];
                 }
             }
             else
             {
-                UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alert show];
-                [self HideActivityIndicator];
-                break;
+                NSLog(@"First=%@",First);
+                if([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue+15]])
+                {
+                    [self VerticalNextChar:First.intValue+15];
+                    i--;
+                }
+                else
+                {
+                    UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert show];
+                    [self HideActivityIndicator];
+                    break;
+                }
             }
         }
-    
-    }
-    else if(First.intValue+1==second.intValue)//Checking Horizantally
-     {
-         for (int i=1; i<sortedLocArray.count; i++)
-         {
-             second=[sortedLocArray objectAtIndex:i];
-             if(First.intValue+1==second.intValue)
-             {
-                 First=second;
-                 if(i==sortedLocArray.count-1)
-                 {
-                     [self validWords];
-                 }
-                 
-             }
-             else
-             {
-                 UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
-                 [self HideActivityIndicator];
-                 break;
-             }
-         }
         
+    }
+    
+    else if(First.intValue+1==second.intValue)//Checking Horizantally
+    {
+        
+        for (int i=1; i<sortedLocArray.count; i++)
+        {
+            second=[sortedLocArray objectAtIndex:i];
+            NSLog(@"First=%@",First);
+            NSLog(@"Second=%@",second);
+            sqlite3_stmt    *statement;
+            
+            const char *dbpath = [databasePath UTF8String];
+            if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+            {
+                NSString *querySQL;
+                const char *query_stmt;
+                querySQL = [NSString stringWithFormat:@"SELECT * FROM BUTTON WHERE LOC=\'%d\'",First.intValue];
+                query_stmt = [querySQL UTF8String];
+                if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+                {
+                    
+                    while(sqlite3_step(statement) == SQLITE_ROW)
+                    {
+                        [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
+                        totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
+                        NSLog(@"myWord=%@",myWord);
+                        NSLog(@"total point=%d",totalPoint);
+                    }
+                    sqlite3_finalize(statement);
+                }
+            }
+            
+            
+            if(First.intValue+1==second.intValue)
+            {
+                First=second;
+                if(i==sortedLocArray.count-1)
+                {
+                    if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+                    {
+                        NSString *querySQL;
+                        const char *query_stmt;
+                        querySQL = [NSString stringWithFormat:@"SELECT * FROM BUTTON WHERE LOC=\'%d\'",second.intValue];
+                        query_stmt = [querySQL UTF8String];
+                        if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+                        {
+                            
+                            while(sqlite3_step(statement) == SQLITE_ROW)
+                            {
+                                [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
+                                totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
+                                NSLog(@"myWord=%@",myWord);
+                                NSLog(@"total point=%d",totalPoint);
+                            }
+                            sqlite3_finalize(statement);
+                        }
+                    }
+                    if([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue+1]])
+                    {
+                        [self HorizantalNextChar:First.intValue+1];
+                    }
+                    
+                   // [self validWords];
+                }
+                
+            }
+            else
+            {
+                if([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue+1]])
+                {
+                    [self HorizantalNextChar:First.intValue+1];
+                    i--;
+                }
+                else
+                {
+                    UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert show];
+                    [self HideActivityIndicator];
+                    break;
+                }
+            }
+        }
     }
     else
     {
-          UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-          [alert show];
+        if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue-1]] )
+        {
+            [self HorizantalPreviousChar:First.intValue-1];
+        }
+        if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue-15]] )
+        {
+            [self VerticalPreviousChar:First.intValue-15];
+        }
+        
+        
+        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
         [self HideActivityIndicator];
     }
 
+    return myWord;
+}
+
+-(void)HorizantalPreviousChar:(int)loc
+{
+    prevCounter=0;
+    while ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",loc]])
+    {
+        prevCounter++;
+        loc=loc-1;
+        NSLog(@"Loc=%d",loc);
+    }
+    sqlite3_stmt    *statement;
+    const char *dbpath = [databasePath UTF8String];
+    int i;
+    if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+    {
+        NSString *querySQL;
+        const char *query_stmt;
+       
+        for( i=loc+1;i<=loc+prevCounter;i++)
+        {
+            [fixedLocArray removeObject:[NSString stringWithFormat:@"%d",i]];
+            querySQL = [NSString stringWithFormat:@"SELECT * FROM FIXED WHERE LOC=\'%d\'",i];
+            query_stmt = [querySQL UTF8String];
+            if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+            {
+            
+                while(sqlite3_step(statement) == SQLITE_ROW)
+                {
+                    [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
+                    totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
+                    NSLog(@"myWord=%@",myWord);
+                    NSLog(@"total point=%d",totalPoint);
+                }
+                sqlite3_finalize(statement);
+            }
+        }
+    }
+    First=[NSString stringWithFormat:@"%d",i];
+    NSLog(@"First=%@",First);
     
-  
+}
+
+-(void)HorizantalNextChar:(int)loc
+{
+    while ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue+1]])
+    {
+        First=[NSString stringWithFormat:@"%d",First.intValue+1];
+        NSLog(@"First=%@",First);
+        sqlite3_stmt    *statement;
+        const char *dbpath = [databasePath UTF8String];
+        if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+        {
+            NSString *querySQL;
+            const char *query_stmt;
+            [fixedLocArray removeObject:First];
+            querySQL = [NSString stringWithFormat:@"SELECT * FROM FIXED WHERE LOC=\'%d\'",First.intValue];
+            query_stmt = [querySQL UTF8String];
+            if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+            {
+                
+                while(sqlite3_step(statement) == SQLITE_ROW)
+                {
+                    [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
+                    totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
+                    NSLog(@"myWord=%@",myWord);
+                    NSLog(@"total point=%d",totalPoint);
+                }
+                sqlite3_finalize(statement);
+            }
+        }
+    }
 
 }
+
+-(void)VerticalPreviousChar:(int)loc
+{
+    prevCounterVertical=0;
+    while ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",loc]])
+    {
+        prevCounterVertical=prevCounterVertical+15;
+        loc=loc-15;
+        NSLog(@"Loc=%d",loc);
+    }
+    sqlite3_stmt    *statement;
+    const char *dbpath = [databasePath UTF8String];
+    int i;
+    if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+    {
+        NSString *querySQL;
+        const char *query_stmt;
+        
+        for( i=loc+15;i<=loc+prevCounterVertical;i=i+15)
+        {
+            [fixedLocArray removeObject:[NSString stringWithFormat:@"%d",i]];
+            querySQL = [NSString stringWithFormat:@"SELECT * FROM FIXED WHERE LOC=\'%d\'",i];
+            query_stmt = [querySQL UTF8String];
+            if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+            {
+                
+                while(sqlite3_step(statement) == SQLITE_ROW)
+                {
+                    [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
+                    totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
+                    NSLog(@"myWord=%@",myWord);
+                    NSLog(@"total point=%d",totalPoint);
+                }
+                sqlite3_finalize(statement);
+            }
+        }
+    }
+    First=[NSString stringWithFormat:@"%d",i];
+    NSLog(@"First=%@",First);
+    
+}
+
+-(void)VerticalNextChar:(int)loc
+{
+    while ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue+15]])
+    {
+        First=[NSString stringWithFormat:@"%d",First.intValue+15];
+        NSLog(@"First=%@",First);
+        sqlite3_stmt    *statement;
+        const char *dbpath = [databasePath UTF8String];
+        if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+        {
+            NSString *querySQL;
+            const char *query_stmt;
+            [fixedLocArray removeObject:First];
+            querySQL = [NSString stringWithFormat:@"SELECT * FROM FIXED WHERE LOC=\'%d\'",First.intValue];
+            query_stmt = [querySQL UTF8String];
+            if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+            {
+                
+                while(sqlite3_step(statement) == SQLITE_ROW)
+                {
+                    [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
+                    totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
+                    NSLog(@"myWord=%@",myWord);
+                    NSLog(@"total point=%d",totalPoint);
+                }
+                sqlite3_finalize(statement);
+            }
+        }
+    }
+    
+}
+
 
 /*-------------------------- Checking Words  is valid or not -------------------------*/
 -(void)validWords
@@ -1150,7 +1632,6 @@
 /*----------- Fetching character, location and point from database -----------------------*/
     NSLog(@"Valid Words");
     sqlite3_stmt    *statement;
-    NSMutableString *myWord=[[NSMutableString alloc]init];
     const char *dbpath = [databasePath UTF8String];
     if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
     {
@@ -1174,10 +1655,10 @@
                 [buttonCoinArray addObject:[[NSString alloc]
                                             initWithUTF8String:
                                             (const char *) sqlite3_column_text(statement, 2)]];
-                 [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
-                totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
-                NSLog(@"myWord=%@",myWord);
-                NSLog(@"total point=%d",totalPoint);
+               //  [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
+              //  totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
+             //   NSLog(@"myWord=%@",myWord);
+            //    NSLog(@"total point=%d",totalPoint);
             }
             sqlite3_finalize(statement);
         }
