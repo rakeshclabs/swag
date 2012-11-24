@@ -63,6 +63,40 @@
     twoFingerTapRecognizer.numberOfTapsRequired = 1;
     twoFingerTapRecognizer.numberOfTouchesRequired = 2;
     [self.scrollView addGestureRecognizer:twoFingerTapRecognizer];
+   
+    
+    myView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, 480)];
+    
+   // myView.backgroundColor=[UIColor blackColor];
+   // myView.alpha= 0.2;
+
+    popView=[[UIImageView alloc]init];
+    popView.frame=CGRectMake(43, 160, 235, 159);
+    popView.image=[UIImage imageNamed:@"popView.png"];
+    popView.userInteractionEnabled=YES;
+    invalidMoveLabel=[[UILabel alloc]init];
+    invalidMoveLabel.frame=CGRectMake(49, 1, 137, 32);
+    invalidMoveLabel.text=@"Invalid Move";
+    invalidMoveLabel.textAlignment=UITextAlignmentCenter;
+    invalidMoveLabel.font=[UIFont boldSystemFontOfSize:20];
+    invalidMoveLabel.textColor=[UIColor yellowColor];
+    invalidMoveLabel.backgroundColor=[UIColor clearColor];
+    msgLabel=[[UILabel alloc]init];
+    msgLabel.frame=CGRectMake(11, 33, 210, 56);
+    msgLabel.text=@"Sorry, must place all tiles in one row or column.";
+    msgLabel.textAlignment=UITextAlignmentLeft;
+    msgLabel.textColor=[UIColor whiteColor];
+    msgLabel.font=[UIFont systemFontOfSize:14];
+    msgLabel.numberOfLines=3;
+    msgLabel.backgroundColor=[UIColor clearColor];
+    
+    okButton=[[UIButton alloc]init];
+    okButton.frame=CGRectMake(83, 103, 66, 33);
+    [okButton setImage:[UIImage imageNamed:@"ok.png"] forState:UIControlStateNormal];
+    [okButton setImage:[UIImage imageNamed:@"okClick.png"] forState:UIControlStateHighlighted];
+    [okButton addTarget:self action:@selector(okButton) forControlEvents:UIControlEventTouchUpInside];
+    
+    
     userScore.text=self.userScoreString;
     opponentScore.text=self.opponentScoreString;
     userName.text=[[NSUserDefaults standardUserDefaults]valueForKey:@"userName"];
@@ -295,7 +329,7 @@
         if(!myImage.image)
             myImage.image=[UIImage imageNamed:@"S.png"];
         myImage.tag=j;
-        [self.view addSubview:myImage];
+        [lowerView addSubview:myImage];
         x=x+41;
     }
 }
@@ -329,6 +363,7 @@
     opponentScore = nil;
     remainingLetters = nil;
     [self setShuffle:nil];
+    lowerView = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -561,7 +596,7 @@
             else if(touchPoint.x<305)
                 tag=7;
         }
-               for (UIImageView *img in self.view.subviews) 
+        for (UIImageView *img in self.view.subviews) 
         {
             if (img.tag == tag&&img.tag>0&&img.tag<8)
             {
@@ -569,10 +604,57 @@
                 {
                     NSLog(@"True");
                     UIImage *newImage=img.image;
+                    sqlite3_stmt    *statement;
+                    const char *dbpath = [databasePath UTF8String];
+                    if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+                    {
+                        NSString *querySQL = [NSString stringWithFormat:@"SELECT CHAR,COIN FROM IMAGE WHERE LOC=\'%d\'",img.tag];
+                        const char *query_stmt = [querySQL UTF8String];
+                        if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+                        {
+                            while(sqlite3_step(statement) == SQLITE_ROW)
+                            {
+                                oldChar = [[NSString alloc]
+                                           initWithUTF8String:
+                                           (const char *) sqlite3_column_text(statement, 0)];
+                                oldPoint=[[NSString alloc]
+                                          initWithUTF8String:
+                                          (const char *) sqlite3_column_text(statement, 1)];
+                                NSLog(@"Current Char=%@",currentChar);
+                            }
+                            sqlite3_finalize(statement);
+                        }
+                        querySQL = [NSString stringWithFormat:@"DELETE FROM IMAGE WHERE LOC=\'%d\'",img.tag];
+                        query_stmt = [querySQL UTF8String];
+                        sqlite3_prepare_v2(swagDB, query_stmt,-1, &statement, NULL);
+                        if (sqlite3_step(statement) != SQLITE_DONE)
+                        {
+                            NSLog(@"Problem with prepare statement:  %s", sqlite3_errmsg(swagDB));
+                        }
+                        else
+                        {
+                            NSLog(@"Record Deleted");
+                        }
+                        NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO IMAGE(LOC, CHAR,COIN) VALUES(\'%d\',\'%@\',\'%@\')",img.tag,currentChar,currentPoint];
+                        const char *insert_stmt = [insertSQL UTF8String];
+                        sqlite3_prepare_v2(swagDB, insert_stmt,-1, &statement, NULL);
+                        if (sqlite3_step(statement) == SQLITE_DONE)
+                            
+                        {
+                            NSLog(@"Contact added");
+                        } else {
+                            NSLog(@"Failed to add contact");
+                        }
+                        
+                        
+                        sqlite3_finalize(statement);
+                        sqlite3_close(swagDB);
+                    }
+
                     img.image=currentImage;
                     for (UIImageView *notImg in self.view.subviews)
                     {
-                        if(notImg.tag!=tag&&notImg.tag!=0)
+                        if(notImg.tag!=tag&&notImg.tag!=0&&notImg.tag<8)
                         {
                             NSLog(@"NOt Image=%d",notImg.tag);
                             if(notImg.image)
@@ -581,6 +663,25 @@
                             }
                             else
                             {
+                                sqlite3_stmt    *statement;
+                                const char *dbpath = [databasePath UTF8String];
+                                if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+                                {
+                                    NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO IMAGE(LOC, CHAR,COIN) VALUES(\'%d\',\'%@\',\'%@\')",notImg.tag,oldChar,oldPoint];
+                                    const char *insert_stmt = [insertSQL UTF8String];
+                                    sqlite3_prepare_v2(swagDB, insert_stmt,-1, &statement, NULL);
+                                    if (sqlite3_step(statement) == SQLITE_DONE)
+                                        
+                                    {
+                                        NSLog(@"Contact added");
+                                    } else {
+                                        NSLog(@"Failed to add contact");
+                                    }
+                                    sqlite3_finalize(statement);
+                                    sqlite3_close(swagDB);
+                                    
+                                }
+
                                 notImg.image=newImage;
                                 break;
                             }
@@ -594,28 +695,31 @@
                     
                     img.image=currentImage;
                     currentImage=nil;
+                    sqlite3_stmt    *statement;
+                    const char *dbpath = [databasePath UTF8String];
+                    if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+                    {
+                        NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO IMAGE(LOC, CHAR,COIN) VALUES(\'%d\',\'%@\',\'%@\')",img.tag,currentChar,currentPoint];
+                        const char *insert_stmt = [insertSQL UTF8String];
+                        sqlite3_prepare_v2(swagDB, insert_stmt,-1, &statement, NULL);
+                        if (sqlite3_step(statement) == SQLITE_DONE)
+                            
+                        {
+                            NSLog(@"Contact added");
+                        } else {
+                            NSLog(@"Failed to add contact");
+                        }
+                        sqlite3_finalize(statement);
+                        sqlite3_close(swagDB);
+                        
+                    }
+
                 }
             }
         }
         
-        sqlite3_stmt    *statement;
-        const char *dbpath = [databasePath UTF8String];
-        if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
-        {
-            NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO IMAGE(LOC, CHAR, COIN) VALUES(\'%d\',\'%@\',\'%@\')",locButton,currentChar,currentPoint];
-            const char *insert_stmt = [insertSQL UTF8String];
-            sqlite3_prepare_v2(swagDB, insert_stmt,-1, &statement, NULL);
-            if (sqlite3_step(statement) == SQLITE_DONE)
-                
-            {
-                NSLog(@"Contact added");
-            } else {
-                NSLog(@"Failed to add contact");
-            }
-            sqlite3_finalize(statement);
-            sqlite3_close(swagDB);
-            
-        }
+       
+        
         
                    
         NSLog(@"touchPoint=%f",touchPoint.y);
@@ -1016,10 +1120,59 @@
                 {
                     NSLog(@"True");
                     UIImage *newImage=img.image;
+                    
+                    sqlite3_stmt    *statement;
+                    const char *dbpath = [databasePath UTF8String];
+                    if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+                    {
+                        NSString *querySQL = [NSString stringWithFormat:@"SELECT CHAR,COIN FROM IMAGE WHERE LOC=\'%d\'",img.tag];
+                        const char *query_stmt = [querySQL UTF8String];
+                        if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+                        {
+                            while(sqlite3_step(statement) == SQLITE_ROW)
+                            {
+                                oldChar = [[NSString alloc]
+                                               initWithUTF8String:
+                                               (const char *) sqlite3_column_text(statement, 0)];
+                                oldPoint=[[NSString alloc]
+                                              initWithUTF8String:
+                                              (const char *) sqlite3_column_text(statement, 1)];
+                                NSLog(@"Current Char=%@",currentChar);
+                            }
+                            sqlite3_finalize(statement);
+                        }
+                        querySQL = [NSString stringWithFormat:@"DELETE FROM IMAGE WHERE LOC=\'%d\'",img.tag];
+                        query_stmt = [querySQL UTF8String];
+                        sqlite3_prepare_v2(swagDB, query_stmt,-1, &statement, NULL);
+                        if (sqlite3_step(statement) != SQLITE_DONE)
+                        {
+                            NSLog(@"Problem with prepare statement:  %s", sqlite3_errmsg(swagDB));
+                        }
+                        else
+                        {
+                            NSLog(@"Record Deleted");
+                        }
+                        NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO IMAGE(LOC, CHAR,COIN) VALUES(\'%d\',\'%@\',\'%@\')",img.tag,currentChar,currentPoint];
+                        const char *insert_stmt = [insertSQL UTF8String];
+                        sqlite3_prepare_v2(swagDB, insert_stmt,-1, &statement, NULL);
+                        if (sqlite3_step(statement) == SQLITE_DONE)
+                            
+                        {
+                            NSLog(@"Contact added");
+                        } else {
+                            NSLog(@"Failed to add contact");
+                        }
+
+                        
+                        sqlite3_finalize(statement);
+                        sqlite3_close(swagDB);
+                    }
+                    
                     img.image=currentImage;
+                    
                     for (UIImageView *notImg in self.view.subviews)
                     {
-                        if(notImg.tag!=tag&&notImg.tag!=0)
+                        if(notImg.tag!=tag&&notImg.tag!=0&&notImg.tag<8)
                         {
                             NSLog(@"NOt Image=%d",notImg.tag);
                             if(notImg.image)
@@ -1029,6 +1182,26 @@
                             else
                             {
                                 notImg.image=newImage;
+                                sqlite3_stmt    *statement;
+                                const char *dbpath = [databasePath UTF8String];
+                                if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+                                {
+                                    NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO IMAGE(LOC, CHAR,COIN) VALUES(\'%d\',\'%@\',\'%@\')",notImg.tag,oldChar,oldPoint];
+                                    const char *insert_stmt = [insertSQL UTF8String];
+                                    sqlite3_prepare_v2(swagDB, insert_stmt,-1, &statement, NULL);
+                                    if (sqlite3_step(statement) == SQLITE_DONE)
+                                        
+                                    {
+                                        NSLog(@"Contact added");
+                                    } else {
+                                        NSLog(@"Failed to add contact");
+                                    }
+                                    sqlite3_finalize(statement);
+                                    sqlite3_close(swagDB);
+                                    
+                                }
+
+                               
                                 break;
                             }
                             //                           tag=notImg.tag;
@@ -1041,30 +1214,31 @@
                     NSLog(@"False");
                     img.image=currentImage;
                     currentImage=nil;
+                    sqlite3_stmt    *statement;
+                    const char *dbpath = [databasePath UTF8String];
+                    if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+                    {
+                        NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO IMAGE(LOC, CHAR,COIN) VALUES(\'%d\',\'%@\',\'%@\')",img.tag,currentChar,currentPoint];
+                        const char *insert_stmt = [insertSQL UTF8String];
+                        sqlite3_prepare_v2(swagDB, insert_stmt,-1, &statement, NULL);
+                        if (sqlite3_step(statement) == SQLITE_DONE)
+                            
+                        {
+                            NSLog(@"Contact added");
+                        } else {
+                            NSLog(@"Failed to add contact");
+                        }
+                        sqlite3_finalize(statement);
+                        sqlite3_close(swagDB);
+                        
+                    }
+
                 }
                 
             }
         }
-        
-        sqlite3_stmt    *statement;
-        const char *dbpath = [databasePath UTF8String];
-        if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
-        {
-            NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO IMAGE(LOC, CHAR,COIN) VALUES(\'%d\',\'%@\',\'%@\')",locButton,currentChar,currentPoint];
-            const char *insert_stmt = [insertSQL UTF8String];
-            sqlite3_prepare_v2(swagDB, insert_stmt,-1, &statement, NULL);
-            if (sqlite3_step(statement) == SQLITE_DONE)
+        NSLog(@"Tag=%d",tag);
                 
-            {
-                NSLog(@"Contact added");
-            } else {
-                NSLog(@"Failed to add contact");
-            }
-            sqlite3_finalize(statement);
-            sqlite3_close(swagDB);
-            
-        }
-        
     }
     mybutton = [UIButton buttonWithType:UIButtonTypeCustom];
     mybutton.frame=CGRectMake(self.homePosition.x, self.homePosition.y,40,40);
@@ -1100,6 +1274,9 @@
 
 - (IBAction)play:(id)sender
 {
+    if(locArray.count>0)
+    {
+        
     [fixedLocArray addObject:@"91"];
     [fixedLocArray addObject:@"92"];
     [fixedLocArray addObject:@"94"];
@@ -1107,11 +1284,11 @@
     [fixedLocArray addObject:@"107"];
     [fixedLocArray addObject:@"124"];
     [fixedLocArray addObject:@"125"];
-   
-    
-
+    [wordsArray removeAllObjects];
+    totalPoint=0;
+    myWord=[[NSMutableString alloc]init];
     [self ShowActivityIndicatorWithTitle:@"Checking..."];
-/*---------------- sorting location Array ----------------------*/
+    /*---------------- sorting location Array ----------------------*/
     sortedLocArray = [locArray sortedArrayUsingComparator: ^(id obj1, id obj2)
     {
     if ([obj1 integerValue] > [obj2 integerValue])
@@ -1167,7 +1344,11 @@
             {
                   [self VerticalNextChar:First.intValue+15];
             }
-            [wordsArray addObject:myWord];
+            
+            NSUInteger characterCount = [myWord length];
+            NSLog(@"Count=%d",characterCount);
+            if(characterCount!=1)
+                [wordsArray addObject:myWord];
             myWord=[[NSMutableString alloc]init];
             
         }
@@ -1211,16 +1392,27 @@
                 
                 [self HorizantalNextChar:First.intValue+1];
             }
-            [wordsArray addObject:myWord];
+            
+            NSUInteger characterCount = [myWord length];
+            NSLog(@"Count=%d",characterCount);
+             if(characterCount!=1)
+                 [wordsArray addObject:myWord];
             myWord=[[NSMutableString alloc]init];
             
         }
     }
-
     
-    NSLog(@"wordsArray=%@",wordsArray);
-
-    
+     First=[sortedLocArray objectAtIndex:0];
+    NSString *returnWord=[self CheckWord:First.intValue];
+    if(returnWord)
+    {
+        [wordsArray addObject:returnWord];
+        NSString *mywords=[wordsArray componentsJoinedByString:@","];
+        NSLog(@"wordsArray=%@",wordsArray);
+        NSLog(@"mywords=%@",mywords);
+        [self validWords:mywords];
+    }
+    }
 }
 
 -(NSString *)CheckWord:(int)loc1
@@ -1367,9 +1559,17 @@
                 }
                 else
                 {
-                    UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                    [alert show];
+                   
+                    [popView addSubview:invalidMoveLabel];
+                    [popView addSubview:msgLabel];
+                    [popView addSubview:okButton];
+                    [myView addSubview:popView];
+                    [self.view addSubview:myView];
+                    lowerView.userInteractionEnabled=NO;
+                   // UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                   // [alert show];
                     [self HideActivityIndicator];
+                    return 0;
                     break;
                 }
             }
@@ -1451,9 +1651,17 @@
                 }
                 else
                 {
-                    UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                    [alert show];
+                    [popView addSubview:invalidMoveLabel];
+                    [popView addSubview:msgLabel];
+                    [popView addSubview:okButton];
+                    [myView addSubview:popView];
+                    [self.view addSubview:myView];
+                    lowerView.userInteractionEnabled=NO;
+
+                  //  UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                  //  [alert show];
                     [self HideActivityIndicator];
+                    return 0;
                     break;
                 }
             }
@@ -1461,19 +1669,26 @@
     }
     else
     {
-        if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue-1]] )
-        {
-            [self HorizantalPreviousChar:First.intValue-1];
-        }
-        if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue-15]] )
-        {
-            [self VerticalPreviousChar:First.intValue-15];
-        }
+       // if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue-1]] )
+      //  {
+      //      [self HorizantalPreviousChar:First.intValue-1];
+      //  }
+      //  if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue-15]] )
+       // {
+       //     [self VerticalPreviousChar:First.intValue-15];
+      //  }
         
-        
-        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
+        [popView addSubview:invalidMoveLabel];
+        [popView addSubview:msgLabel];
+        [popView addSubview:okButton];
+        [myView addSubview:popView];
+        [self.view addSubview:myView];
+        lowerView.userInteractionEnabled=NO;
+
+        //UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        //[alert show];
         [self HideActivityIndicator];
+        return 0;
     }
 
     return myWord;
@@ -1627,9 +1842,9 @@
 
 
 /*-------------------------- Checking Words  is valid or not -------------------------*/
--(void)validWords
+-(void)validWords:(NSString *)mywords
 {
-/*----------- Fetching character, location and point from database -----------------------*/
+   /*----------- Fetching character, location and point from database -----------------------*/
     NSLog(@"Valid Words");
     sqlite3_stmt    *statement;
     const char *dbpath = [databasePath UTF8String];
@@ -1690,7 +1905,7 @@
     }
 /*------------------------ Sending/Receiving data from server  to check valid words-------------------------*/
      NSLog(@"ButtonLocArray=%@ buttonCharArray=%@ buttonCoinArray=%@",buttonLocArray,buttonCharArray,buttonCoinArray);
-     NSString *post =[[NSString alloc] initWithFormat:@"access_token=%@&game_word=%@&mode=%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"access_token"],myWord,[[NSUserDefaults standardUserDefaults]valueForKey:@"gameMode"]];
+     NSString *post =[[NSString alloc] initWithFormat:@"access_token=%@&game_word=%@&mode=%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"access_token"],mywords,[[NSUserDefaults standardUserDefaults]valueForKey:@"gameMode"]];
      NSURL *url=[NSURL URLWithString:@"http://23.23.78.187/swwf/check_words.php"];
      NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
      NSString *postLength = [NSString stringWithFormat:@"%d", [postData length]];
@@ -1707,9 +1922,9 @@
      {
      NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
      NSLog(@"json is %@",json);
-         validWord=[json valueForKey:@"valid_words1"];
-         NSString *invalideWords=[json valueForKey:@"invalid_words1"];
-         if(validWord)
+         NSArray *validwords=[json valueForKey:@"valid words"];
+         NSArray *invalideWords=[json valueForKey:@"invalid words"];
+         if(validwords)
          {
              NSLog(@"valid Words=%@",validWord);
              UIAlertView *alert=[[UIAlertView alloc]initWithTitle:nil message:[NSString stringWithFormat:@"Send Move to %@ ?",self.opponentNameString] delegate:self cancelButtonTitle:@"Cancel Move" otherButtonTitles:@"Send Move",nil];
@@ -1719,13 +1934,15 @@
          }
          else if(invalideWords)
          {
-             UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:[NSString stringWithFormat:@"Sorry,'%@' may be misspelled or may be a proper noun",invalideWords] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+             NSString *invalidwords=[invalideWords componentsJoinedByString:@","];
+             UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:[NSString stringWithFormat:@"Sorry,'%@' may be misspelled or may be a proper noun",invalidwords] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
              [alert show];
              [self HideActivityIndicator];
          NSLog(@"Invalid Words=%@",invalideWords);
              [buttonCharArray removeAllObjects];
              [buttonCoinArray removeAllObjects];
              [buttonLocArray removeAllObjects];
+             [wordsArray removeAllObjects];
          }
      }
  }
@@ -1811,5 +2028,12 @@
 
 -(void)HideActivityIndicator{
     [SVProgressHUD dismiss];
+}
+
+-(void)okButton
+{
+   // lowerView.userInteractionEnabled=NO;
+    [myView removeFromSuperview];
+    
 }
 @end

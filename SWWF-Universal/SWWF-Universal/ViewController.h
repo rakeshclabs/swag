@@ -13,6 +13,11 @@
 @interface ViewController : UIViewController<UIScrollViewDelegate,UIGestureRecognizerDelegate>
 {
     BOOL zoom;
+    UIImageView *popView;
+    UIView *myView;
+    UILabel *invalidMoveLabel;
+    UILabel *msgLabel;
+    UIButton *okButton;
     UIImageView *movingImageView;
     UIButton *mybutton;
     UIImageView *myImage;
@@ -49,6 +54,8 @@
     NSArray *sortedLocArray;
     NSString *currentChar;
     NSString *currentPoint;
+    NSString *oldChar;
+    NSString *oldPoint;
     NSString *validWord;
     NSString *First;
     NSMutableString *myWord;
@@ -58,6 +65,7 @@
     database *path;
     int prevCounter;
     int prevCounterVertical;
+    IBOutlet UIView *lowerView;
 }
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 
