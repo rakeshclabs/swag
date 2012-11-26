@@ -933,104 +933,102 @@
                             <view contentMode="scaleToFill" id="MMX-EQ-FwV">
                                 <rect key="frame" x="0.0" y="339" width="320" height="121"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <imageView tag="300" contentMode="scaleToFill" image="player-bar.png" id="hxh-Fq-4lw">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="121"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="3cB-wI-3lQ">
-                                        <rect key="frame" x="267" y="71" width="49" height="48"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
-                                        <state key="normal">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="resign:" destination="9gM-yh-7U9" eventType="touchUpInside" id="cd5-55-aQL"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="5AN-vr-QEC">
-                                        <rect key="frame" x="215" y="71" width="49" height="48"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
-                                        <state key="normal">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="recall:" destination="9gM-yh-7U9" eventType="touchUpInside" id="g3I-5y-Mug"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="QLq-rN-tJh">
-                                        <rect key="frame" x="5" y="71" width="49" height="48"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
-                                        <state key="normal">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="play:" destination="9gM-yh-7U9" eventType="touchUpInside" id="AgR-ZT-v3W"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="2tg-rc-vcO">
-                                        <rect key="frame" x="163" y="72" width="49" height="48"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
-                                        <state key="normal">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="swap:" destination="9gM-yh-7U9" eventType="touchUpInside" id="aHi-fH-IXV"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="jj4-cf-Spl">
-                                        <rect key="frame" x="109" y="72" width="50" height="48"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
-                                        <state key="normal">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="shuffle:" destination="9gM-yh-7U9" eventType="touchUpInside" id="EP9-me-XWz"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="6zJ-dm-lIg">
-                                        <rect key="frame" x="56" y="71" width="53" height="48"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
-                                        <state key="normal">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="pass:" destination="9gM-yh-7U9" eventType="touchUpInside" id="JBf-Rb-8sZ"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
+                            <imageView tag="300" contentMode="scaleToFill" image="player-bar.png" id="hxh-Fq-4lw">
+                                <rect key="frame" x="0.0" y="339" width="320" height="121"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="3cB-wI-3lQ">
+                                <rect key="frame" x="267" y="412" width="49" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                <state key="normal">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="resign:" destination="9gM-yh-7U9" eventType="touchUpInside" id="cd5-55-aQL"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="5AN-vr-QEC">
+                                <rect key="frame" x="215" y="412" width="49" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                <state key="normal">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="recall:" destination="9gM-yh-7U9" eventType="touchUpInside" id="g3I-5y-Mug"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="QLq-rN-tJh">
+                                <rect key="frame" x="3" y="412" width="49" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                                <state key="normal">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="play:" destination="9gM-yh-7U9" eventType="touchUpInside" id="AgR-ZT-v3W"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="2tg-rc-vcO">
+                                <rect key="frame" x="162" y="413" width="49" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                <state key="normal">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="swap:" destination="9gM-yh-7U9" eventType="touchUpInside" id="aHi-fH-IXV"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="jj4-cf-Spl">
+                                <rect key="frame" x="108" y="412" width="50" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                <state key="normal">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="shuffle:" destination="9gM-yh-7U9" eventType="touchUpInside" id="EP9-me-XWz"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="6zJ-dm-lIg">
+                                <rect key="frame" x="54" y="413" width="53" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                <state key="normal">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="pass:" destination="9gM-yh-7U9" eventType="touchUpInside" id="JBf-Rb-8sZ"/>
+                                </connections>
+                            </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Player 1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" id="0jz-Yl-JsB">
                                 <rect key="frame" x="45" y="392" width="55" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1165,135 +1163,6 @@
         <image name="usernameBox.png" width="589" height="482"/>
         <image name="usernameScreen.jpg" width="640" height="920"/>
     </resources>
-    <classes>
-        <class className="UsernameViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/UsernameViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="continueButton:"/>
-                <relationship kind="action" name="goBackButton:"/>
-                <relationship kind="outlet" name="userField" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="ViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="backButton:"/>
-                <relationship kind="action" name="chat:"/>
-                <relationship kind="action" name="pass:"/>
-                <relationship kind="action" name="play:"/>
-                <relationship kind="action" name="recall:"/>
-                <relationship kind="action" name="resign:"/>
-                <relationship kind="action" name="shuffle:"/>
-                <relationship kind="action" name="swap:"/>
-                <relationship kind="action" name="touchDragInside:"/>
-                <relationship kind="action" name="touchDragOutside:"/>
-                <relationship kind="outlet" name="buttonBackroundView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="buttonView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="charImage" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="dropTarget" candidateClass="UIView"/>
-                <relationship kind="outlet" name="lowerView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="opponentName" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="opponentScore" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="remainingLetters" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="shuffle" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="userName" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="userScore" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="account" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/account.h"/>
-            <relationships>
-                <relationship kind="action" name="backButton:"/>
-                <relationship kind="action" name="hideKeyboard:"/>
-                <relationship kind="action" name="logout:"/>
-                <relationship kind="action" name="saveclose:"/>
-                <relationship kind="outlet" name="emailField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="logout" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="newPassword" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="retypePassword" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="userNameField" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="emailViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/emailViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="cancelButton:"/>
-                <relationship kind="action" name="connectButton:"/>
-                <relationship kind="outlet" name="cancelButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="connectButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="idField" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="facebookOpponent" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/facebookOpponent.h"/>
-            <relationships>
-                <relationship kind="action" name="backAction:"/>
-                <relationship kind="action" name="settings:"/>
-                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-        <class className="gameMode" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/gameMode.h"/>
-            <relationships>
-                <relationship kind="action" name="backButton:"/>
-                <relationship kind="action" name="mixedMode:"/>
-                <relationship kind="action" name="settings:"/>
-                <relationship kind="action" name="swagMode:"/>
-            </relationships>
-        </class>
-        <class className="gameSummary" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/gameSummary.h"/>
-            <relationships>
-                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-        <class className="loginView" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/loginView.h"/>
-            <relationships>
-                <relationship kind="action" name="emailButton:"/>
-                <relationship kind="action" name="facebookButton:"/>
-                <relationship kind="outlet" name="BG" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="emailButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="facebookButton" candidateClass="UIButton"/>
-            </relationships>
-        </class>
-        <class className="selectOpponent" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/selectOpponent.h"/>
-            <relationships>
-                <relationship kind="action" name="facebookButton:"/>
-                <relationship kind="action" name="random:"/>
-                <relationship kind="action" name="user:"/>
-                <relationship kind="outlet" name="bg" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="facebookButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="passButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="randomButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="usernameButton" candidateClass="UIButton"/>
-            </relationships>
-        </class>
-        <class className="settings" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/settings.h"/>
-            <relationships>
-                <relationship kind="outlet" name="alertButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="alertImageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="soundButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="soundImageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="vibrationButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="vibrationImageView" candidateClass="UIImageView"/>
-            </relationships>
-        </class>
-        <class className="subOpponent" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/subOpponent.h"/>
-            <relationships>
-                <relationship kind="action" name="backButton:"/>
-                <relationship kind="action" name="hideKeyboard:"/>
-                <relationship kind="action" name="settingButton:"/>
-                <relationship kind="action" name="startButton:"/>
-                <relationship kind="outlet" name="imageBox" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="nameField" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

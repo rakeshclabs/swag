@@ -84,9 +84,6 @@
     msgLabel=[[UILabel alloc]init];
     msgLabel.frame=CGRectMake(11, 33, 210, 56);
     msgLabel.text=@"Sorry, must place all tiles in one row or column.";
-    msgLabel.textAlignment=UITextAlignmentLeft;
-    msgLabel.textColor=[UIColor whiteColor];
-    msgLabel.font=[UIFont systemFontOfSize:14];
     msgLabel.numberOfLines=3;
     msgLabel.backgroundColor=[UIColor clearColor];
     
@@ -95,6 +92,18 @@
     [okButton setImage:[UIImage imageNamed:@"ok.png"] forState:UIControlStateNormal];
     [okButton setImage:[UIImage imageNamed:@"okClick.png"] forState:UIControlStateHighlighted];
     [okButton addTarget:self action:@selector(okButton) forControlEvents:UIControlEventTouchUpInside];
+    
+    yesButton=[[UIButton alloc]init];
+    yesButton.frame=CGRectMake(122, 95, 74, 35);
+    [yesButton setImage:[UIImage imageNamed:@"yes.png"] forState:UIControlStateNormal];
+    [yesButton setImage:[UIImage imageNamed:@"yesClick.png"] forState:UIControlStateHighlighted];
+    [yesButton addTarget:self action:@selector(yesButton) forControlEvents:UIControlEventTouchUpInside];
+
+    noButton=[[UIButton alloc]init];
+    noButton.frame=CGRectMake(35, 95, 74, 35);
+    [noButton setImage:[UIImage imageNamed:@"no.png"] forState:UIControlStateNormal];
+    [noButton setImage:[UIImage imageNamed:@"noClick.png"] forState:UIControlStateHighlighted];
+    [noButton addTarget:self action:@selector(okButton) forControlEvents:UIControlEventTouchUpInside];
     
     
     userScore.text=self.userScoreString;
@@ -326,10 +335,8 @@
         myImage=[[UIImageView alloc]init];
         myImage.frame=CGRectMake(x, 348, 40, 40);
         myImage.image=[UIImage imageNamed:[NSString stringWithFormat:@"%@.png",[charArray objectAtIndex:j-1]]];
-        if(!myImage.image)
-            myImage.image=[UIImage imageNamed:@"S.png"];
         myImage.tag=j;
-        [lowerView addSubview:myImage];
+        [self.view addSubview:myImage];
         x=x+41;
     }
 }
@@ -1276,142 +1283,157 @@
 {
     if(locArray.count>0)
     {
+        if([locArray containsObject:@"113"]||[fixedLocArray containsObject:@"113"])
+        {
+            [wordsArray removeAllObjects];
+            sortedLocArray=nil;
+            totalPoint=0;
+            myWord=[[NSMutableString alloc]init];
+            [self ShowActivityIndicatorWithTitle:@"Checking..."];
+        /*---------------- sorting location Array ----------------------*/
+            sortedLocArray = [locArray sortedArrayUsingComparator: ^(id obj1, id obj2){
+            if ([obj1 integerValue] > [obj2 integerValue])
+            {
+                return (NSComparisonResult)NSOrderedDescending;
+            }
+            if ([obj1 integerValue] < [obj2 integerValue])
+            {
+                return (NSComparisonResult)NSOrderedAscending;
+            }
+            return (NSComparisonResult)NSOrderedSame;}];
+    
+            NSLog(@"locarray=%@",locArray);
+            NSLog(@"Sorted Array=%@",sortedLocArray);
+    
+            First=[sortedLocArray objectAtIndex:0];
+            NSString *second=[sortedLocArray objectAtIndex:1];
         
-    [fixedLocArray addObject:@"91"];
-    [fixedLocArray addObject:@"92"];
-    [fixedLocArray addObject:@"94"];
-    [fixedLocArray addObject:@"106"];
-    [fixedLocArray addObject:@"107"];
-    [fixedLocArray addObject:@"124"];
-    [fixedLocArray addObject:@"125"];
-    [wordsArray removeAllObjects];
-    totalPoint=0;
-    myWord=[[NSMutableString alloc]init];
-    [self ShowActivityIndicatorWithTitle:@"Checking..."];
-    /*---------------- sorting location Array ----------------------*/
-    sortedLocArray = [locArray sortedArrayUsingComparator: ^(id obj1, id obj2)
-    {
-    if ([obj1 integerValue] > [obj2 integerValue])
-    {
-           return (NSComparisonResult)NSOrderedDescending;
-    }
-    if ([obj1 integerValue] < [obj2 integerValue])
-    {
-            return (NSComparisonResult)NSOrderedAscending;
-    }
-    return (NSComparisonResult)NSOrderedSame;}];
-    
-    NSLog(@"locarray=%@",locArray);
-    NSLog(@"Sorted Array=%@",sortedLocArray);
-    
-    First=[sortedLocArray objectAtIndex:0];
-    NSString *second=[sortedLocArray objectAtIndex:1];
-    
-    if(First.intValue+1==second.intValue)
-    {
-        for(int i=0;i<sortedLocArray.count;i++)
-        {
-            First=[sortedLocArray objectAtIndex:i];
-            if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue-15]])
+            if(First.intValue+1==second.intValue)
             {
-                [self VerticalPreviousChar:First.intValue-15];
-            }
-            
-            sqlite3_stmt    *statement;
-            const char *dbpath = [databasePath UTF8String];
-            if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
-            {
-                NSString *querySQL;
-                const char *query_stmt;
-                querySQL = [NSString stringWithFormat:@"SELECT * FROM BUTTON WHERE LOC=\'%d\'",First.intValue];
-                query_stmt = [querySQL UTF8String];
-                if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+                for(int i=0;i<sortedLocArray.count;i++)
                 {
-                    
-                    while(sqlite3_step(statement) == SQLITE_ROW)
+                    First=[sortedLocArray objectAtIndex:i];
+                    if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue-15]])
                     {
-                        [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
-                        totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
-                        NSLog(@"myWord=%@",myWord);
-                        NSLog(@"total point=%d",totalPoint);
+                        [self VerticalPreviousChar:First.intValue-15];
                     }
-                    sqlite3_finalize(statement);
+            
+                    sqlite3_stmt    *statement;
+                    const char *dbpath = [databasePath UTF8String];
+                    if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+                    {
+                        NSString *querySQL;
+                        const char *query_stmt;
+                        querySQL = [NSString stringWithFormat:@"SELECT * FROM BUTTON WHERE LOC=\'%d\'",First.intValue];
+                        query_stmt = [querySQL UTF8String];
+                        if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+                        {
+                            while(sqlite3_step(statement) == SQLITE_ROW)
+                            {
+                                [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
+                                totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
+                                NSLog(@"myWord=%@",myWord);
+                                NSLog(@"total point=%d",totalPoint);
+                            }
+                            sqlite3_finalize(statement);
+                        }
+                    }
+
+            
+                    if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue+15]])
+                    {
+                        [self VerticalNextChar:First.intValue+15];
+                    }
+            
+                    NSUInteger characterCount = [myWord length];
+                    NSLog(@"Count=%d",characterCount);
+                    if(characterCount!=1)
+                        [wordsArray addObject:myWord];
+                    myWord=[[NSMutableString alloc]init];
+            
+                }
+            }
+    
+            else if(First.intValue+15==second.intValue)
+            {
+                for(int i=0;i<sortedLocArray.count;i++)
+                {
+                    First=[sortedLocArray objectAtIndex:i];
+                    NSLog(@"First=%@",First);
+                    if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue-1]])
+                    {
+                        [self HorizantalPreviousChar:First.intValue-1];
+                    }
+            
+                    sqlite3_stmt    *statement;
+                    const char *dbpath = [databasePath UTF8String];
+                    if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+                    {
+                        NSString *querySQL;
+                        const char *query_stmt;
+                        querySQL = [NSString stringWithFormat:@"SELECT * FROM BUTTON WHERE LOC=\'%d\'",First.intValue];
+                        query_stmt = [querySQL UTF8String];
+                        if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+                        {
+                    
+                            while(sqlite3_step(statement) == SQLITE_ROW)
+                            {
+                                [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
+                                totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
+                                NSLog(@"myWord=%@",myWord);
+                                NSLog(@"total point=%d",totalPoint);
+                            }
+                            sqlite3_finalize(statement);
+                        }
+                    }
+
+                    if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue+1]])
+                    {
+                        [self HorizantalNextChar:First.intValue+1];
+                    }
+            
+                    NSUInteger characterCount = [myWord length];
+                    NSLog(@"Count=%d",characterCount);
+                    if(characterCount!=1)
+                        [wordsArray addObject:myWord];
+                    myWord=[[NSMutableString alloc]init];
+                }
+            }
+    
+            First=[sortedLocArray objectAtIndex:0];
+            NSString *returnWord=[self CheckWord:First.intValue];
+            if(returnWord)
+            {
+                [wordsArray addObject:returnWord];
+                NSString *mywords=[wordsArray componentsJoinedByString:@","];
+                NSLog(@"wordsArray=%@",wordsArray);
+                NSLog(@"mywords=%@",mywords);
+                [self validWords:mywords];
+            }
+        }
+        else
+        {
+            msgLabel.frame=CGRectMake(11, 33, 210, 56);
+            msgLabel.text=@"Sorry, the first word played must cross the center star.";
+            msgLabel.textAlignment=UITextAlignmentLeft;
+            msgLabel.textColor=[UIColor whiteColor];
+            msgLabel.font=[UIFont systemFontOfSize:14];
+            
+            [popView addSubview:invalidMoveLabel];
+            [popView addSubview:msgLabel];
+            [popView addSubview:okButton];
+            [myView addSubview:popView];
+            [self.view addSubview:myView];
+            [self.view bringSubviewToFront:myView];
+            for (UIImageView *imageview in self.view.subviews)
+            {
+                if (imageview.tag==1||imageview.tag==2||imageview.tag==3||imageview.tag==4||imageview.tag==5||imageview.tag==6||imageview.tag==7)
+                {
+                    [imageview removeFromSuperview];
                 }
             }
 
-            
-            if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue+15]])
-            {
-                  [self VerticalNextChar:First.intValue+15];
-            }
-            
-            NSUInteger characterCount = [myWord length];
-            NSLog(@"Count=%d",characterCount);
-            if(characterCount!=1)
-                [wordsArray addObject:myWord];
-            myWord=[[NSMutableString alloc]init];
-            
         }
-    }
-    
-    else if(First.intValue+15==second.intValue)
-    {
-        for(int i=0;i<sortedLocArray.count;i++)
-        {
-            First=[sortedLocArray objectAtIndex:i];
-            NSLog(@"First=%@",First);
-            if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue-1]])
-            {
-                [self HorizantalPreviousChar:First.intValue-1];
-            }
-            
-            sqlite3_stmt    *statement;
-            const char *dbpath = [databasePath UTF8String];
-            if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
-            {
-                NSString *querySQL;
-                const char *query_stmt;
-                querySQL = [NSString stringWithFormat:@"SELECT * FROM BUTTON WHERE LOC=\'%d\'",First.intValue];
-                query_stmt = [querySQL UTF8String];
-                if (sqlite3_prepare_v2(swagDB,query_stmt, -1, &statement, NULL) == SQLITE_OK)
-                {
-                    
-                    while(sqlite3_step(statement) == SQLITE_ROW)
-                    {
-                        [myWord appendString:[NSString stringWithString:[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)]]];
-                        totalPoint=totalPoint+[[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)].intValue;
-                        NSLog(@"myWord=%@",myWord);
-                        NSLog(@"total point=%d",totalPoint);
-                    }
-                    sqlite3_finalize(statement);
-                }
-            }
-
-            if ([fixedLocArray containsObject:[NSString stringWithFormat:@"%d",First.intValue+1]])
-            {
-                
-                [self HorizantalNextChar:First.intValue+1];
-            }
-            
-            NSUInteger characterCount = [myWord length];
-            NSLog(@"Count=%d",characterCount);
-             if(characterCount!=1)
-                 [wordsArray addObject:myWord];
-            myWord=[[NSMutableString alloc]init];
-            
-        }
-    }
-    
-     First=[sortedLocArray objectAtIndex:0];
-    NSString *returnWord=[self CheckWord:First.intValue];
-    if(returnWord)
-    {
-        [wordsArray addObject:returnWord];
-        NSString *mywords=[wordsArray componentsJoinedByString:@","];
-        NSLog(@"wordsArray=%@",wordsArray);
-        NSLog(@"mywords=%@",mywords);
-        [self validWords:mywords];
-    }
     }
 }
 
@@ -1559,13 +1581,25 @@
                 }
                 else
                 {
-                   
+                    msgLabel.frame=CGRectMake(11, 33, 210, 56);
+                    msgLabel.text=@"Sorry, must place all tiles in one row or column.";
+                    msgLabel.textAlignment=UITextAlignmentLeft;
+                    msgLabel.textColor=[UIColor whiteColor];
+                    msgLabel.font=[UIFont systemFontOfSize:14];
+
                     [popView addSubview:invalidMoveLabel];
                     [popView addSubview:msgLabel];
                     [popView addSubview:okButton];
                     [myView addSubview:popView];
                     [self.view addSubview:myView];
-                    lowerView.userInteractionEnabled=NO;
+                    [self.view bringSubviewToFront:myView];
+                    for (UIImageView *imageview in self.view.subviews)
+                    {
+                        if (imageview.tag==1||imageview.tag==2||imageview.tag==3||imageview.tag==4||imageview.tag==5||imageview.tag==6||imageview.tag==7)
+                        {
+                            [imageview removeFromSuperview];
+                        }
+                    }
                    // UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                    // [alert show];
                     [self HideActivityIndicator];
@@ -1651,12 +1685,26 @@
                 }
                 else
                 {
+                    msgLabel.frame=CGRectMake(11, 33, 210, 56);
+                    msgLabel.text=@"Sorry, must place all tiles in one row or column.";
+                    msgLabel.textAlignment=UITextAlignmentLeft;
+                    msgLabel.textColor=[UIColor whiteColor];
+                    msgLabel.font=[UIFont systemFontOfSize:14];
+
                     [popView addSubview:invalidMoveLabel];
                     [popView addSubview:msgLabel];
                     [popView addSubview:okButton];
                     [myView addSubview:popView];
                     [self.view addSubview:myView];
-                    lowerView.userInteractionEnabled=NO;
+                    [self.view bringSubviewToFront:myView];
+                    for (UIImageView *imageview in self.view.subviews)
+                    {
+                        if (imageview.tag==1||imageview.tag==2||imageview.tag==3||imageview.tag==4||imageview.tag==5||imageview.tag==6||imageview.tag==7)
+                        {
+                            [imageview removeFromSuperview];
+                        }
+                    }
+
 
                   //  UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                   //  [alert show];
@@ -1677,13 +1725,25 @@
        // {
        //     [self VerticalPreviousChar:First.intValue-15];
       //  }
-        
+        msgLabel.frame=CGRectMake(11, 33, 210, 56);
+        msgLabel.text=@"Sorry, must place all tiles in one row or column.";
+        msgLabel.textAlignment=UITextAlignmentLeft;
+        msgLabel.textColor=[UIColor whiteColor];
+        msgLabel.font=[UIFont systemFontOfSize:14];
+
         [popView addSubview:invalidMoveLabel];
         [popView addSubview:msgLabel];
         [popView addSubview:okButton];
         [myView addSubview:popView];
         [self.view addSubview:myView];
-        lowerView.userInteractionEnabled=NO;
+        [self.view bringSubviewToFront:myView];
+        for (UIImageView *imageview in self.view.subviews)
+        {
+            if (imageview.tag==1||imageview.tag==2||imageview.tag==3||imageview.tag==4||imageview.tag==5||imageview.tag==6||imageview.tag==7)
+            {
+                [imageview removeFromSuperview];            }
+        }
+
 
         //UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:@"Sorry, must place all tiles in one row or column" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         //[alert show];
@@ -1926,19 +1986,53 @@
          NSArray *invalideWords=[json valueForKey:@"invalid words"];
          if(validwords)
          {
-             NSLog(@"valid Words=%@",validWord);
-             UIAlertView *alert=[[UIAlertView alloc]initWithTitle:nil message:[NSString stringWithFormat:@"Send Move to %@ ?",self.opponentNameString] delegate:self cancelButtonTitle:@"Cancel Move" otherButtonTitles:@"Send Move",nil];
-             [alert show];
-             alert.tag=1;
+              msgLabel.frame=CGRectMake(15, 33, 200, 56);
+             msgLabel.text=[NSString stringWithFormat:@"Send Move to '%@'?",self.opponentNameString];
+             msgLabel.textColor=[UIColor yellowColor];
+             msgLabel.textAlignment=UITextAlignmentCenter;
+             msgLabel.font=[UIFont boldSystemFontOfSize:16];
+             [popView addSubview:msgLabel];
+             [popView addSubview:yesButton];
+             [popView addSubview:noButton];
+             [myView addSubview:popView];
+             [self.view addSubview:myView];
+             [self.view bringSubviewToFront:myView];
+             for (UIImageView *imageview in self.view.subviews)
+             {
+                 if (imageview.tag==1||imageview.tag==2||imageview.tag==3||imageview.tag==4||imageview.tag==5||imageview.tag==6||imageview.tag==7)
+                 {
+                     [imageview removeFromSuperview];
+                 }
+             }
+
+             
              [self HideActivityIndicator];
          }
          else if(invalideWords)
          {
              NSString *invalidwords=[invalideWords componentsJoinedByString:@","];
-             UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:[NSString stringWithFormat:@"Sorry,'%@' may be misspelled or may be a proper noun",invalidwords] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-             [alert show];
+             msgLabel.text=[NSString stringWithFormat:@"Sorry,'%@' may be misspelled or may be a proper noun",invalidwords];
+             msgLabel.frame=CGRectMake(11, 33, 210, 56);
+             msgLabel.textAlignment=UITextAlignmentLeft;
+             msgLabel.textColor=[UIColor whiteColor];
+             msgLabel.font=[UIFont systemFontOfSize:14];
+             [popView addSubview:invalidMoveLabel];
+             [popView addSubview:msgLabel];
+             [popView addSubview:okButton];
+             [myView addSubview:popView];
+             [self.view addSubview:myView];
+             [self.view bringSubviewToFront:myView];
+             for (UIImageView *imageview in self.view.subviews)
+             {
+                 if (imageview.tag==1||imageview.tag==2||imageview.tag==3||imageview.tag==4||imageview.tag==5||imageview.tag==6||imageview.tag==7)
+                 {
+                     [imageview removeFromSuperview];
+                 }
+             }
+            // UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Invalid Move" message:[NSString stringWithFormat:@"Sorry,'%@' may be misspelled or may be a proper noun",invalidwords] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+             //[alert show];
              [self HideActivityIndicator];
-         NSLog(@"Invalid Words=%@",invalideWords);
+             NSLog(@"Invalid Words=%@",invalideWords);
              [buttonCharArray removeAllObjects];
              [buttonCoinArray removeAllObjects];
              [buttonLocArray removeAllObjects];
@@ -1949,7 +2043,7 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-/*----------------------- Send Move  ------------------------------------*/
+
     if(alertView.tag==1)
     {
         if(buttonIndex==1)
@@ -2012,7 +2106,91 @@
 - (IBAction)swap:(id)sender {
 }
 
-- (IBAction)recall:(id)sender {
+- (IBAction)recall:(id)sender
+{
+    NSLog(@"Recall");
+    const char *dbpath = [databasePath UTF8String];
+    [imageLocArray removeAllObjects];
+    [imageCharArray removeAllObjects];
+    [imageCoinArray removeAllObjects];
+    [buttonCharArray removeAllObjects];
+    [buttonCoinArray removeAllObjects];
+    [buttonLocArray removeAllObjects];
+    if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+    {
+        NSString *querySQL;
+        querySQL = [NSString stringWithFormat:@"SELECT * FROM IMAGE"];
+        const char *query_stmt = [querySQL UTF8String];
+        // const char *sql = "SELECT * FROM  data WHERE date=\"%@\"",currentDate;
+        sqlite3_stmt *sqlStatement;
+        if(sqlite3_prepare(swagDB, query_stmt, -1, &sqlStatement, NULL) != SQLITE_OK)
+        {
+            // NSLog(@"Problem with prepare statement:  %@", sqlite3_errmsg(db));
+        }else
+        {
+            while (sqlite3_step(sqlStatement)==SQLITE_ROW)
+            {
+                [imageLocArray addObject:[NSString stringWithUTF8String:(char *) sqlite3_column_text(sqlStatement,0)]];
+            }
+        }
+        
+        querySQL = [NSString stringWithFormat:@"SELECT * FROM BUTTON"];
+        query_stmt = [querySQL UTF8String];
+        // const char *sql = "SELECT * FROM  data WHERE date=\"%@\"",currentDate;
+        if(sqlite3_prepare(swagDB, query_stmt, -1, &sqlStatement, NULL) != SQLITE_OK)
+        {
+            // NSLog(@"Problem with prepare statement:  %@", sqlite3_errmsg(db));
+        }else
+        {
+            while (sqlite3_step(sqlStatement)==SQLITE_ROW)
+            {
+                [buttonLocArray addObject:[NSString stringWithUTF8String:(char *) sqlite3_column_text(sqlStatement,0)]];
+                [buttonCharArray addObject:[NSString stringWithUTF8String:(char *) sqlite3_column_text(sqlStatement,1)]];
+                [buttonCoinArray addObject:[NSString stringWithUTF8String:(char *) sqlite3_column_text(sqlStatement,2)]];
+            }
+        }
+        sqlite3_finalize(sqlStatement);
+        sqlite3_close(swagDB);
+    }
+    
+    NSMutableArray *wArray=[[NSMutableArray alloc]init];
+    for (int i=1; i<8; i++)
+    {
+        if(![imageLocArray containsObject:[NSString stringWithFormat:@"%d",i]])
+        {
+            [wArray addObject:[NSString stringWithFormat:@"%d",i]];
+        }
+    }
+    NSLog(@"ButtonLocArray=%@ wArray=%@ buttonChar=%@",buttonLocArray,wArray,buttonCharArray);
+    
+    UIImageView *imageToMove=[[UIImageView alloc]init];
+    for(int i=0; i<buttonLocArray.count; i++)
+    {
+        
+        imageToMove.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",[buttonCharArray objectAtIndex:i]]];
+      //  imageToMove.image=[UIImage imageNamed:[NSString stringWithFormat:@"%@.png",[buttonCharArray objectAtIndex:i]]];
+        NSString *loc=[buttonLocArray objectAtIndex:i];
+        int x=((((loc.intValue %15))-1)*40);
+        int y=((loc.intValue/15)*40)+20;
+        if(self.scrollView.contentOffset.x>0)
+        {
+            x=x-self.scrollView.contentOffset.x;
+        }
+        if(self.scrollView.contentOffset.y>0)
+        {
+            y=y-self.scrollView.contentOffset.y;
+        }
+        
+        imageToMove.frame=CGRectMake(x, y, 40, 40);
+        [self.view addSubview:imageToMove];
+        NSString *wString=[wArray objectAtIndex:i];
+        int w=wString.intValue*41-25;
+        NSLog(@"x=%d y=%d w=%d",x,y,w);
+       // [self moveImage:imageToMove duration:2.0 curve:UIViewAnimationCurveLinear x:w-x y:348-y];
+       
+        [self slideView:imageToMove withDuration:1 toX:w andY:348];
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
+    }
 }
 
 - (IBAction)resign:(id)sender {
@@ -2034,6 +2212,141 @@
 {
    // lowerView.userInteractionEnabled=NO;
     [myView removeFromSuperview];
+    [invalidMoveLabel removeFromSuperview];
+    [msgLabel removeFromSuperview];
+    [okButton removeFromSuperview];
+    [popView removeFromSuperview];
+    [yesButton removeFromSuperview];
+    [noButton removeFromSuperview];
     
+    
+    const char *dbpath = [databasePath UTF8String];
+    [imageLocArray removeAllObjects];
+    [imageCharArray removeAllObjects];
+    [imageCoinArray removeAllObjects];
+    if (sqlite3_open(dbpath, &swagDB) == SQLITE_OK)
+    {
+        NSString *querySQL;
+        querySQL = [NSString stringWithFormat:@"SELECT * FROM IMAGE"];
+        const char *query_stmt = [querySQL UTF8String];
+        // const char *sql = "SELECT * FROM  data WHERE date=\"%@\"",currentDate;
+        sqlite3_stmt *sqlStatement;
+        if(sqlite3_prepare(swagDB, query_stmt, -1, &sqlStatement, NULL) != SQLITE_OK)
+        {
+            // NSLog(@"Problem with prepare statement:  %@", sqlite3_errmsg(db));
+        }else
+        {
+            while (sqlite3_step(sqlStatement)==SQLITE_ROW)
+            {
+                [imageLocArray addObject:[NSString stringWithUTF8String:(char *) sqlite3_column_text(sqlStatement,0)]];
+                [imageCharArray addObject:[NSString stringWithUTF8String:(char *) sqlite3_column_text(sqlStatement,1)]];
+                [imageCoinArray addObject:[NSString stringWithUTF8String:(char *) sqlite3_column_text(sqlStatement,2)]];
+            }
+        }
+        sqlite3_finalize(sqlStatement);
+        sqlite3_close(swagDB);
+    }
+    int x=16;
+    for (int j=1; j<8; j++)
+    {
+        myImage=[[UIImageView alloc]init];
+        myImage.frame=CGRectMake(x, 348, 40, 40);
+        if([imageLocArray containsObject:[NSString stringWithFormat:@"%d",j]])
+        {
+            
+            myImage.image=[UIImage imageNamed:[NSString stringWithFormat:@"%@.png",[imageCharArray objectAtIndex:[imageLocArray indexOfObject:[NSString stringWithFormat:@"%d",j]]]]];
+        }
+        
+        myImage.tag=j;
+        [self.view addSubview:myImage];
+        x=x+41;
+    }
 }
+
+-(void)yesButton
+{
+    /*----------------------- Send Move  ------------------------------------*/
+    [myView removeFromSuperview];
+    [invalidMoveLabel removeFromSuperview];
+    [msgLabel removeFromSuperview];
+    [okButton removeFromSuperview];
+    [popView removeFromSuperview];
+    [yesButton removeFromSuperview];
+    [noButton removeFromSuperview];
+    [self ShowActivityIndicatorWithTitle:@"Sending..."];
+    NSLog(@"Word Send");
+    NSLog(@"game id=%@",self.gameId);
+    NSLog(@"game Character=%@",gameCharacter);
+    NSLog(@"game char Pos=%@",gameCharPos);
+    
+    NSString *post =[[NSString alloc] initWithFormat:@"access_token=%@&game=%@&coins=%@&game_word=%@&game_character=%@&game_character_pos=%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"access_token"],self.gameId,[NSString stringWithFormat:@"%d",totalPoint],validWord,gameCharacter,gameCharPos];
+    NSURL *url=[NSURL URLWithString:@"http://23.23.78.187/swwf/complete.php"];
+    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    NSString *postLength = [NSString stringWithFormat:@"%d", [postData length]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:url];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:postData];
+    [[NSUserDefaults standardUserDefaults] setInteger:[[NSUserDefaults standardUserDefaults] integerForKey:@"ratecount"]+1  forKey:@"ratecount"];
+    [[NSUserDefaults standardUserDefaults]synchronize];
+    NSError *error;
+    NSURLResponse *response;
+    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    if(data)
+    {
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        NSLog(@"json is %@",json);
+        NSDictionary *characterArray=[json objectForKey:@"character_array"];
+        NSArray *coins=[characterArray valueForKey:@"coins"];
+        NSArray *newChar=[characterArray valueForKey:@"name"];
+        [self.charArray addObjectsFromArray:newChar];
+        [self.charPointArray addObjectsFromArray:coins];
+        NSLog(@"Char Array=%@",self.charArray);
+        NSLog(@"char Point Array=%@",self.charPointArray);
+        [fixedLocArray addObjectsFromArray:buttonLocArray];
+        [fixedCharArray addObjectsFromArray:buttonCharArray];
+        [locArray removeAllObjects];
+        [self.imageView removeFromSuperview];
+        [self DataBase];
+        [self scrableBoard];
+        userScore.text=[NSString stringWithFormat:@"%d",totalPoint];
+        [self HideActivityIndicator];
+   }
+}
+
+-(void) slideView:(UIView *)uiv_slide withDuration:(double)d_duration toX:(CGFloat)xValue andY:(CGFloat)yValue
+{
+    //Make an animation to slide the view off the screen
+    [UIView animateWithDuration:d_duration animations:^
+    {
+        //uiv_slide.center = CGPointMake(xValue,yValue);
+        [uiv_slide setFrame:CGRectMake(xValue, yValue, uiv_slide.frame.size.width, uiv_slide.frame.size.height)];
+    }
+    completion:^(BOOL finished)
+    {
+    
+    }];
+}
+
+- (void)moveImage:(UIImageView *)moveImage duration:(NSTimeInterval)duration
+            curve:(int)curve x:(CGFloat)x y:(CGFloat)y
+{
+    // Setup the animation
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:duration];
+    [UIView setAnimationCurve:curve];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    
+    // The transform matrix
+    CGAffineTransform transform = CGAffineTransformMakeTranslation(x, y);
+    moveImage.transform = transform;
+    
+    // Commit the changes
+    [UIView commitAnimations];
+ }
+
+
+
 @end

@@ -18,6 +18,8 @@
     UILabel *invalidMoveLabel;
     UILabel *msgLabel;
     UIButton *okButton;
+    UIButton *yesButton;
+    UIButton *noButton;
     UIImageView *movingImageView;
     UIButton *mybutton;
     UIImageView *myImage;

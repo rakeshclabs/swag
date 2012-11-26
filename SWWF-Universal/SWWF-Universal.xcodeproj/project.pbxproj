@@ -27,6 +27,10 @@
 		FC8DF2191648E24B00272304 /* green.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FC8DF2181648E24B00272304 /* green.jpeg */; };
 		FC8DF21C1648F0A400272304 /* loginView.m in Sources */ = {isa = PBXBuildFile; fileRef = FC8DF21B1648F0A400272304 /* loginView.m */; };
 		FC8F4C2616579B7C00159E56 /* database.m in Sources */ = {isa = PBXBuildFile; fileRef = FC8F4C2516579B7C00159E56 /* database.m */; };
+		FC926BCC16634595008A6C1F /* No.png in Resources */ = {isa = PBXBuildFile; fileRef = FC926BCB16634595008A6C1F /* No.png */; };
+		FC926BCF166345AC008A6C1F /* NoClick.png in Resources */ = {isa = PBXBuildFile; fileRef = FC926BCE166345AC008A6C1F /* NoClick.png */; };
+		FC926BD1166345BB008A6C1F /* yes.png in Resources */ = {isa = PBXBuildFile; fileRef = FC926BD0166345BB008A6C1F /* yes.png */; };
+		FC926BD3166345D0008A6C1F /* yesClick.png in Resources */ = {isa = PBXBuildFile; fileRef = FC926BD2166345D0008A6C1F /* yesClick.png */; };
 		FC9549A01654C35200F1F879 /* top-bar.png in Resources */ = {isa = PBXBuildFile; fileRef = FC95499F1654C35200F1F879 /* top-bar.png */; };
 		FC95F1AF165A03A000FE7694 /* swagDatabase.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = FC95F1AE165A03A000FE7694 /* swagDatabase.sqlite */; };
 		FC95F1B9165A086D00FE7694 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FC95F1B8165A086D00FE7694 /* libsqlite3.dylib */; };
@@ -199,6 +203,10 @@
 		FC8DF21B1648F0A400272304 /* loginView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = loginView.m; sourceTree = "<group>"; };
 		FC8F4C2416579B7C00159E56 /* database.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = database.h; sourceTree = "<group>"; };
 		FC8F4C2516579B7C00159E56 /* database.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = database.m; sourceTree = "<group>"; };
+		FC926BCB16634595008A6C1F /* No.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = No.png; sourceTree = "<group>"; };
+		FC926BCE166345AC008A6C1F /* NoClick.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NoClick.png; sourceTree = "<group>"; };
+		FC926BD0166345BB008A6C1F /* yes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yes.png; sourceTree = "<group>"; };
+		FC926BD2166345D0008A6C1F /* yesClick.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yesClick.png; sourceTree = "<group>"; };
 		FC95499F1654C35200F1F879 /* top-bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-bar.png"; sourceTree = "<group>"; };
 		FC95F1AE165A03A000FE7694 /* swagDatabase.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = swagDatabase.sqlite; sourceTree = "<group>"; };
 		FC95F1B8165A086D00FE7694 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -636,6 +644,10 @@
 				FC9A743F1660DD2D00031304 /* popview.png */,
 				FC9A74421660E4B200031304 /* ok.png */,
 				FC9A74441660E68100031304 /* okClick.png */,
+				FC926BCB16634595008A6C1F /* No.png */,
+				FC926BCE166345AC008A6C1F /* NoClick.png */,
+				FC926BD0166345BB008A6C1F /* yes.png */,
+				FC926BD2166345D0008A6C1F /* yesClick.png */,
 				FC9D6F70165BA0BB004519F0 /* Letters */,
 			);
 			name = Images;
@@ -820,6 +832,10 @@
 				FC9A74401660DD2D00031304 /* popview.png in Resources */,
 				FC9A74431660E4B200031304 /* ok.png in Resources */,
 				FC9A74451660E68100031304 /* okClick.png in Resources */,
+				FC926BCC16634595008A6C1F /* No.png in Resources */,
+				FC926BCF166345AC008A6C1F /* NoClick.png in Resources */,
+				FC926BD1166345BB008A6C1F /* yes.png in Resources */,
+				FC926BD3166345D0008A6C1F /* yesClick.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
